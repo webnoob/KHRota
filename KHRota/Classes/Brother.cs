@@ -1,16 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using KHRota.Services;
 
 namespace KHRota.Classes
 {
     public class Brother : BaseEntity
     {
+        private readonly JobService _jobService;
+
+        [NonSerialized]
         private List<Job> _assignedJobs;
+
         private List<DateTime> _unavailableDates;
+        private List<DayOfWeek> _excludeDays;
+        private List<string> _assignedJobGuids;
+
+        public Brother()
+        {
+            _jobService = new JobService();
+        }
 
         public string FirstName { get; set; }
 
         public string LastName { get; set; }
+
+        public string FullName { get { return string.Format("{0} {1}", FirstName, LastName); } }
 
         public int JobsPerPeriod { get; set; }
 
@@ -18,10 +33,33 @@ namespace KHRota.Classes
 
         public int MinimumMeetingsBetweenJobs { get; set; }
 
-        public List<Job> AssignedJobs
+        public List<DayOfWeek> ExcludeDays
         {
-            get { return _assignedJobs ?? (_assignedJobs = new List<Job>()); }
-            set { _assignedJobs = value; }
+            get { return _excludeDays ?? (_excludeDays = new List<DayOfWeek>()); }
+            set { _excludeDays = value; }
+        }
+
+        internal List<Job> AssignedJobs
+        {
+            get
+            {
+                _assignedJobs = _jobService.Get().Where(j => AssignedJobGuids.Contains(j.Guid)).ToList();
+                if (_assignedJobs.Any())
+                    return _assignedJobs;
+
+                return _assignedJobs = new List<Job>();
+            }
+            set
+            {
+                _assignedJobs = value;
+                _assignedJobGuids = value.Select(j => j.Guid).ToList();
+            }
+        }
+
+        public List<string> AssignedJobGuids
+        {
+            get { return _assignedJobGuids ?? (_assignedJobGuids = new List<string>()); }
+            set { _assignedJobGuids = value; }
         }
 
         public List<DateTime> UnavailableDates

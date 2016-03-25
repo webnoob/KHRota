@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using KHRota.Classes;
+using KHRota.Data;
 
 namespace KHRota.Services
 {
@@ -16,7 +17,8 @@ namespace KHRota.Services
 
         public IEnumerable<Brother> Get()
         {
-            return new List<Brother>
+            #region fake data
+            /*return new List<Brother>
             {
                 new Brother
                 {
@@ -226,7 +228,10 @@ namespace KHRota.Services
                             .Where(j => new[] {"Sound", "Platform Mic", "Roving Mic 1", "Roving Mic 2"}.Contains(j.Name))
                             .ToList()
                 }
-            };
+            };*/
+            #endregion
+
+            return DbStorage.Brothers;
         }
 
         public Brother GetByGuid(string guid)
@@ -237,6 +242,30 @@ namespace KHRota.Services
         public bool AllowedToDoJob(Brother brother, Job job)
         {
             return brother.AssignedJobs.Any(j => j.Guid == job.Guid);
+        }
+
+        public void Update(Brother brother)
+        {
+            Delete(brother);
+            Insert(brother);
+        }
+
+        private Brother Insert(Brother brother)
+        {
+            if (string.IsNullOrEmpty(brother.Guid))
+                brother.Guid = Guid.NewGuid().ToString();
+
+            if (Get().FirstOrDefault(p => p.Guid.Equals(brother.Guid, StringComparison.OrdinalIgnoreCase)) == null)
+            {
+                DbStorage.Brothers.Add(brother);
+            }
+
+            return brother;
+        }
+
+        public void Delete(Brother brother)
+        {
+            DbStorage.Brothers.Remove(brother);
         }
     }
 }

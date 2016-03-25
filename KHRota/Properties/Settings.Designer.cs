@@ -34,5 +34,47 @@ namespace KHRota.Properties {
                 this["MonthsInAdvance"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string SavedMeetings {
+            get {
+                return ((string)(this["SavedMeetings"]));
+            }
+            set {
+                this["SavedMeetings"] = value;
+            }
+        }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string SavedJobs
+        {
+            get
+            {
+                return ((string)(this["SavedJobs"]));
+            }
+            set
+            {
+                this["SavedJobs"] = value;
+            }
+        }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string SavedBrothers
+        {
+            get
+            {
+                return ((string)(this["SavedBrothers"]));
+            }
+            set
+            {
+                this["SavedBrothers"] = value;
+            }
+        }
     }
 }

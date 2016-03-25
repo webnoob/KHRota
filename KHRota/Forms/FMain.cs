@@ -1,27 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using KHPlayer.Extensions;
 using KHRota.Services;
-using Microsoft.Reporting.WinForms;
 
-namespace KHRota
+namespace KHRota.Forms
 {
-    public partial class Form1 : Form
+    public partial class FMain : BaseForm
     {
-        private TestService _testService;
+        private readonly TestService _testService;
 
-        public Form1()
+        public FMain()
         {
             InitializeComponent();
             _testService = new TestService();
+            DbService.Load();
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -42,7 +35,7 @@ namespace KHRota
                 csv = csv.Substring(0, csv.Length - 1) + "\r\n";
             }
 
-            File.WriteAllText(@"Z:\SourceCode\KHRota\KHRota\KHRota\rota.csv", csv);
+            File.WriteAllText(@"Z:\SourceCode\KHRota\KHRota\rota.csv", csv);
 
             //meetingSchedule.ToSerialisedXml(@"Z:\SourceCode\KHRota\KHRota\KHRota\rota.xml");
         }
@@ -50,6 +43,30 @@ namespace KHRota
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Application.Exit();
+        }
+
+        private void meetingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (var fMeeting = new FMeetings())
+            {
+                fMeeting.ShowDialog(this);
+            }
+        }
+
+        private void jobsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (var fJobs = new FJobs())
+            {
+                fJobs.ShowDialog(this);
+            }
+        }
+
+        private void brothersToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (var fBrothers = new FBrothers())
+            {
+                fBrothers.ShowDialog(this);
+            }
         }
     }
 }

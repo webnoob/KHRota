@@ -1,6 +1,6 @@
-﻿namespace KHRota
+﻿namespace KHRota.Forms
 {
-    partial class Form1
+    partial class FMain
     {
         /// <summary>
         /// Required designer variable.
@@ -31,11 +31,11 @@
             this.button1 = new System.Windows.Forms.Button();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.brothersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.jobsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.meetingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.jobsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.brothersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -68,13 +68,6 @@
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
             // 
-            // exitToolStripMenuItem
-            // 
-            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.exitToolStripMenuItem.Text = "Exit";
-            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
-            // 
             // settingsToolStripMenuItem
             // 
             this.settingsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -85,25 +78,35 @@
             this.settingsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.settingsToolStripMenuItem.Text = "Settings";
             // 
-            // brothersToolStripMenuItem
+            // meetingsToolStripMenuItem
             // 
-            this.brothersToolStripMenuItem.Name = "brothersToolStripMenuItem";
-            this.brothersToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.brothersToolStripMenuItem.Text = "Brothers";
+            this.meetingsToolStripMenuItem.Name = "meetingsToolStripMenuItem";
+            this.meetingsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.meetingsToolStripMenuItem.Text = "Meetings";
+            this.meetingsToolStripMenuItem.Click += new System.EventHandler(this.meetingsToolStripMenuItem_Click);
             // 
             // jobsToolStripMenuItem
             // 
             this.jobsToolStripMenuItem.Name = "jobsToolStripMenuItem";
             this.jobsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.jobsToolStripMenuItem.Text = "Jobs";
+            this.jobsToolStripMenuItem.Click += new System.EventHandler(this.jobsToolStripMenuItem_Click);
             // 
-            // meetingsToolStripMenuItem
+            // brothersToolStripMenuItem
             // 
-            this.meetingsToolStripMenuItem.Name = "meetingsToolStripMenuItem";
-            this.meetingsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.meetingsToolStripMenuItem.Text = "Meetings";
+            this.brothersToolStripMenuItem.Name = "brothersToolStripMenuItem";
+            this.brothersToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.brothersToolStripMenuItem.Text = "Brothers";
+            this.brothersToolStripMenuItem.Click += new System.EventHandler(this.brothersToolStripMenuItem_Click);
             // 
-            // Form1
+            // exitToolStripMenuItem
+            // 
+            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.exitToolStripMenuItem.Text = "Exit";
+            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+            // 
+            // FMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -111,8 +114,8 @@
             this.Controls.Add(this.button1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
-            this.Name = "Form1";
-            this.Text = "Form1";
+            this.Name = "FMain";
+            this.Text = "KHRota";
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);

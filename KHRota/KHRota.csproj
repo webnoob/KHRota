@@ -51,13 +51,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\..\KHPlayer\KHPlayer\Extensions\FileExtensions.cs">
+    <Compile Include="..\..\KHPlayer\KHPlayer\Extensions\FileExtensions.cs">
       <Link>Helpers\FileExtensions.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\KHPlayer\KHPlayer\Extensions\SerializationExtensions.cs">
+    <Compile Include="..\..\KHPlayer\KHPlayer\Extensions\SerializationExtensions.cs">
       <Link>Helpers\SerializationExtensions.cs</Link>
     </Compile>
     <Compile Include="Classes\BaseEntity.cs" />
+    <Compile Include="Data\DbStorage.cs" />
+    <Compile Include="Forms\BaseForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Classes\Brother.cs" />
     <Compile Include="Classes\BrotherSuitabilityFactor.cs" />
     <Compile Include="Classes\Job.cs" />
@@ -69,15 +73,34 @@
     <Compile Include="Classes\SchedulePeriod.cs" />
     <Compile Include="Classes\SuitabilityFactor.cs" />
     <Compile Include="Extensions\CollectionExtensions.cs" />
-    <Compile Include="Form1.cs">
+    <Compile Include="Forms\FBrothers.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="Forms\FBrothers.Designer.cs">
+      <DependentUpon>FBrothers.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FMain.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FMain.Designer.cs">
+      <DependentUpon>FMain.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FJobs.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FJobs.Designer.cs">
+      <DependentUpon>FJobs.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FMeetings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FMeetings.Designer.cs">
+      <DependentUpon>FMeetings.cs</DependentUpon>
     </Compile>
     <Compile Include="Helpers\DateTimeHelper.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\DbService.cs" />
     <Compile Include="SuitabilityCalculators\HasBeenUsedButOtherBrothersHaventWeightCalc.cs" />
     <Compile Include="SuitabilityCalculators\HasBeenUsedTooManyTimesWeightCalc.cs" />
     <Compile Include="SuitabilityCalculators\DidThisJobLastTimeWeightCalc.cs" />
@@ -93,8 +116,17 @@
     <Compile Include="SuitabilityCalculators\Base\SuitabilityWeightCalculatorResult.cs" />
     <Compile Include="SuitabilityCalculators\Base\SuitabilityWeightCalculatorResultStatus.cs" />
     <Compile Include="Services\TestService.cs" />
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\FBrothers.resx">
+      <DependentUpon>FBrothers.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FMain.resx">
+      <DependentUpon>FMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FJobs.resx">
+      <DependentUpon>FJobs.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FMeetings.resx">
+      <DependentUpon>FMeetings.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
