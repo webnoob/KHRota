@@ -17,6 +17,7 @@ namespace KHRota.Services
             Settings.Default.SavedMeetings = DbStorage.Meetings.ToSerializedJson();
             Settings.Default.SavedJobs = DbStorage.Jobs.ToSerializedJson();
             Settings.Default.SavedBrothers = DbStorage.Brothers.ToSerializedJson();
+            Settings.Default.SavedJobGroups = DbStorage.JobGroups.ToSerializedJson();
             Settings.Default.Save();
         }
 
@@ -25,6 +26,7 @@ namespace KHRota.Services
             DbStorage.Meetings = Settings.Default.SavedMeetings.ToDeserialisedJson<List<Meeting>>();
             DbStorage.Jobs = Settings.Default.SavedJobs.ToDeserialisedJson<List<Job>>();
             DbStorage.Brothers = Settings.Default.SavedBrothers.ToDeserialisedJson<List<Brother>>();
+            DbStorage.JobGroups = Settings.Default.SavedJobGroups.ToDeserialisedJson<List<JobGroup>>();
         }
     }
 }

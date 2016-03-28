@@ -36,14 +36,15 @@
             this.jobsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.brothersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.reportViewer1 = new Microsoft.Reporting.WinForms.ReportViewer();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(0, 27);
+            this.button1.Location = new System.Drawing.Point(12, 27);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(395, 47);
+            this.button1.Size = new System.Drawing.Size(909, 47);
             this.button1.TabIndex = 0;
             this.button1.Text = "Generate Schedule";
             this.button1.UseVisualStyleBackColor = true;
@@ -55,7 +56,7 @@
             this.fileToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(395, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(933, 24);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -75,47 +76,58 @@
             this.jobsToolStripMenuItem,
             this.brothersToolStripMenuItem});
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.settingsToolStripMenuItem.Text = "Settings";
             // 
             // meetingsToolStripMenuItem
             // 
             this.meetingsToolStripMenuItem.Name = "meetingsToolStripMenuItem";
-            this.meetingsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.meetingsToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
             this.meetingsToolStripMenuItem.Text = "Meetings";
             this.meetingsToolStripMenuItem.Click += new System.EventHandler(this.meetingsToolStripMenuItem_Click);
             // 
             // jobsToolStripMenuItem
             // 
             this.jobsToolStripMenuItem.Name = "jobsToolStripMenuItem";
-            this.jobsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.jobsToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
             this.jobsToolStripMenuItem.Text = "Jobs";
             this.jobsToolStripMenuItem.Click += new System.EventHandler(this.jobsToolStripMenuItem_Click);
             // 
             // brothersToolStripMenuItem
             // 
             this.brothersToolStripMenuItem.Name = "brothersToolStripMenuItem";
-            this.brothersToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.brothersToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
             this.brothersToolStripMenuItem.Text = "Brothers";
             this.brothersToolStripMenuItem.Click += new System.EventHandler(this.brothersToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+            // 
+            // reportViewer1
+            // 
+            this.reportViewer1.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.reportViewer1.LocalReport.ReportEmbeddedResource = "KHRota.Forms.Report1.rdlc";
+            this.reportViewer1.Location = new System.Drawing.Point(0, 80);
+            this.reportViewer1.Name = "reportViewer1";
+            this.reportViewer1.Size = new System.Drawing.Size(933, 395);
+            this.reportViewer1.TabIndex = 2;
             // 
             // FMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(395, 74);
+            this.ClientSize = new System.Drawing.Size(933, 475);
+            this.Controls.Add(this.reportViewer1);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "FMain";
             this.Text = "KHRota";
+            this.Load += new System.EventHandler(this.FMain_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
@@ -133,6 +145,7 @@
         private System.Windows.Forms.ToolStripMenuItem meetingsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem jobsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem brothersToolStripMenuItem;
+        private Microsoft.Reporting.WinForms.ReportViewer reportViewer1;
     }
 }
 

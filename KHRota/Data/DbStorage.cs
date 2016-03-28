@@ -8,6 +8,7 @@ namespace KHRota.Data
         private static List<Job> _jobs;
         private static List<Meeting> _meetings;
         private static List<Brother> _brothers;
+        private static List<JobGroup> _jobGroups;
 
         public static List<Job> Jobs
         {
@@ -25,6 +26,12 @@ namespace KHRota.Data
         {
             get { return _brothers ?? (_brothers = new List<Brother>()); }
             set { _brothers = value; }
+        }
+
+        public static List<JobGroup> JobGroups
+        {
+            get { return _jobGroups ?? (_jobGroups = new List<JobGroup>()); }
+            set { _jobGroups = value; }
         }
     }
 }

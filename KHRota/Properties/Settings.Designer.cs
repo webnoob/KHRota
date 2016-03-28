@@ -76,5 +76,20 @@ namespace KHRota.Properties {
                 this["SavedBrothers"] = value;
             }
         }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string SavedJobGroups
+        {
+            get
+            {
+                return ((string)(this["SavedJobGroups"]));
+            }
+            set
+            {
+                this["SavedJobGroups"] = value;
+            }
+        }
     }
 }

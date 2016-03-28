@@ -34,6 +34,10 @@
             this.bCancel = new System.Windows.Forms.Button();
             this.cbEditJob = new System.Windows.Forms.ComboBox();
             this.bDelete = new System.Windows.Forms.Button();
+            this.lJobGroup = new System.Windows.Forms.Label();
+            this.cbJobGroups = new System.Windows.Forms.ComboBox();
+            this.bAddJobGroup = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // lJobName
@@ -49,14 +53,14 @@
             // 
             this.tbName.Location = new System.Drawing.Point(144, 39);
             this.tbName.Name = "tbName";
-            this.tbName.Size = new System.Drawing.Size(171, 20);
+            this.tbName.Size = new System.Drawing.Size(172, 20);
             this.tbName.TabIndex = 1;
             // 
             // bSave
             // 
-            this.bSave.Location = new System.Drawing.Point(14, 64);
+            this.bSave.Location = new System.Drawing.Point(12, 121);
             this.bSave.Name = "bSave";
-            this.bSave.Size = new System.Drawing.Size(302, 23);
+            this.bSave.Size = new System.Drawing.Size(304, 23);
             this.bSave.TabIndex = 9;
             this.bSave.Text = "Save";
             this.bSave.UseVisualStyleBackColor = true;
@@ -64,9 +68,9 @@
             // 
             // bCancel
             // 
-            this.bCancel.Location = new System.Drawing.Point(14, 93);
+            this.bCancel.Location = new System.Drawing.Point(12, 150);
             this.bCancel.Name = "bCancel";
-            this.bCancel.Size = new System.Drawing.Size(302, 23);
+            this.bCancel.Size = new System.Drawing.Size(304, 23);
             this.bCancel.TabIndex = 10;
             this.bCancel.Text = "Close";
             this.bCancel.UseVisualStyleBackColor = true;
@@ -92,11 +96,53 @@
             this.bDelete.UseVisualStyleBackColor = true;
             this.bDelete.Click += new System.EventHandler(this.bDelete_Click);
             // 
+            // lJobGroup
+            // 
+            this.lJobGroup.AutoSize = true;
+            this.lJobGroup.Location = new System.Drawing.Point(12, 72);
+            this.lJobGroup.Name = "lJobGroup";
+            this.lJobGroup.Size = new System.Drawing.Size(56, 13);
+            this.lJobGroup.TabIndex = 13;
+            this.lJobGroup.Text = "Job Group";
+            // 
+            // cbJobGroups
+            // 
+            this.cbJobGroups.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbJobGroups.FormattingEnabled = true;
+            this.cbJobGroups.Location = new System.Drawing.Point(144, 65);
+            this.cbJobGroups.Name = "cbJobGroups";
+            this.cbJobGroups.Size = new System.Drawing.Size(172, 21);
+            this.cbJobGroups.TabIndex = 14;
+            // 
+            // bAddJobGroup
+            // 
+            this.bAddJobGroup.Location = new System.Drawing.Point(144, 92);
+            this.bAddJobGroup.Name = "bAddJobGroup";
+            this.bAddJobGroup.Size = new System.Drawing.Size(91, 23);
+            this.bAddJobGroup.TabIndex = 15;
+            this.bAddJobGroup.Text = "Add Group";
+            this.bAddJobGroup.UseVisualStyleBackColor = true;
+            this.bAddJobGroup.Click += new System.EventHandler(this.bAddJobGroup_Click);
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(241, 92);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 16;
+            this.button1.Text = "Delete";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // FJobs
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(329, 129);
+            this.ClientSize = new System.Drawing.Size(329, 191);
+            this.Controls.Add(this.button1);
+            this.Controls.Add(this.bAddJobGroup);
+            this.Controls.Add(this.cbJobGroups);
+            this.Controls.Add(this.lJobGroup);
             this.Controls.Add(this.bDelete);
             this.Controls.Add(this.cbEditJob);
             this.Controls.Add(this.bCancel);
@@ -118,5 +164,9 @@
         private System.Windows.Forms.Button bCancel;
         private System.Windows.Forms.ComboBox cbEditJob;
         private System.Windows.Forms.Button bDelete;
+        private System.Windows.Forms.Label lJobGroup;
+        private System.Windows.Forms.ComboBox cbJobGroups;
+        private System.Windows.Forms.Button bAddJobGroup;
+        private System.Windows.Forms.Button button1;
     }
 }

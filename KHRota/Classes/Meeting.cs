@@ -5,6 +5,7 @@ using KHRota.Services;
 
 namespace KHRota.Classes
 {
+    [Serializable]
     public class Meeting : BaseEntity
     {
         private readonly JobService _jobService;

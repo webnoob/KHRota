@@ -1,21 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using KHRota.Classes;
 using KHRota.Services;
+using Microsoft.VisualBasic;
 
 namespace KHRota.Forms
 {
     public partial class FJobs : BaseForm
     {
         private readonly JobService _jobService;
+        private readonly JobGroupService _jobGroupService;
 
         public FJobs()
         {
             _jobService = new JobService();
+            _jobGroupService = new JobGroupService();
 
             InitializeComponent();
             LoadJobList(null);
+            LoadJobGroupList(null);
         }
 
         private void LoadJobList(Job job)
@@ -36,6 +42,17 @@ namespace KHRota.Forms
                 cbEditJob.SelectedItem = job;
         }
 
+        private void LoadJobGroupList(JobGroup jobGroup)
+        {
+            var groupsToBind = new List<JobGroup>(_jobGroupService.Get());
+            cbJobGroups.DataSource = groupsToBind;
+            cbJobGroups.DisplayMember = "Name";
+            cbJobGroups.ValueMember = "Guid";
+
+            if (jobGroup != null)
+                cbJobGroups.SelectedItem = jobGroup;
+        }
+
         private void bCancel_Click(object sender, EventArgs e)
         {
             Close();
@@ -43,8 +60,15 @@ namespace KHRota.Forms
 
         private void bSave_Click(object sender, EventArgs e)
         {
+            if (cbJobGroups.SelectedItem == null || string.IsNullOrEmpty(tbName.Text))
+            {
+                MessageBox.Show("You must enter a job name and select a job group.");
+                return;
+            }
+
             var job = cbEditJob.SelectedItem as Job ?? new Job();
             job.Name = tbName.Text;
+            job.JobGroup = cbJobGroups.SelectedItem as JobGroup;
             _jobService.Update(job);
             DbService.Save();
             LoadJobList(job);
@@ -59,6 +83,7 @@ namespace KHRota.Forms
         private void LoadFormValues(Job job)
         {
             tbName.Text = job.Name == "New Job ..." ? "" : job.Name;
+            LoadJobGroupList(job.JobGroup);
         }
 
         private void bDelete_Click(object sender, EventArgs e)
@@ -72,6 +97,43 @@ namespace KHRota.Forms
             DbService.Save();
             
             LoadJobList(null);
+        }
+
+        private void bAddJobGroup_Click(object sender, EventArgs e)
+        {
+            var point = GetScreenPoint();
+            var name = Interaction.InputBox("Job Group Name?", "Job Group Name", "", point.X, point.Y);
+            if (String.IsNullOrEmpty(name))
+                return;
+
+            var existingJobGroup = _jobGroupService.Get().FirstOrDefault(jg => jg.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+            if (existingJobGroup != null)
+                return;
+
+            var jobGroup = _jobGroupService.Update(new JobGroup {Name = name});
+            DbService.Save();
+            LoadJobGroupList(jobGroup);
+        }
+
+        private Point GetScreenPoint()
+        {
+            var screen = Screen.FromControl(this);
+            var workingArea = screen.WorkingArea;
+            var x = Math.Max(workingArea.X, workingArea.X + (workingArea.Width - Width) / 2);
+            var y = Math.Max(workingArea.Y, workingArea.Y + (workingArea.Height - Height) / 2);
+
+            return new Point(x, y);
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            var existingJobGroup = _jobGroupService.Get().FirstOrDefault(jg => jg.Name.Equals(cbJobGroups.Text, StringComparison.OrdinalIgnoreCase));
+            if (existingJobGroup == null)
+                return;
+
+            _jobGroupService.Delete(existingJobGroup);
+            DbService.Save();
+            LoadJobGroupList(null);
         }
     }
 }
