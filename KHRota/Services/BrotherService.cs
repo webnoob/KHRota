@@ -267,5 +267,11 @@ namespace KHRota.Services
         {
             DbStorage.Brothers.Remove(brother);
         }
+
+        public bool IsAllowedToWorkDay(Brother brother, DayOfWeek dayOfWeek, Job jobToAssign)
+        {
+            var brotherCanWorkIt = !brother.JobExclusions.Any(ex => ex.DayOfWeek == dayOfWeek && ex.Job == jobToAssign);
+            return brotherCanWorkIt;
+        }
     }
 }

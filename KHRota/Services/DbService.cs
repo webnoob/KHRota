@@ -12,6 +12,14 @@ namespace KHRota.Services
 {
     public class DbService
     {
+        private class ExportedData
+        {
+            public List<Meeting> Meetings { get; set; }
+            public List<Job> Jobs { get; set; }
+            public List<Brother> Brothers { get; set; }
+            public List<JobGroup> JobGroups { get; set; } 
+        }
+
         public void Save()
         {
             Settings.Default.SavedMeetings = DbStorage.Meetings.ToSerializedJson();
@@ -27,6 +35,29 @@ namespace KHRota.Services
             DbStorage.Jobs = Settings.Default.SavedJobs.ToDeserialisedJson<List<Job>>();
             DbStorage.Brothers = Settings.Default.SavedBrothers.ToDeserialisedJson<List<Brother>>();
             DbStorage.JobGroups = Settings.Default.SavedJobGroups.ToDeserialisedJson<List<JobGroup>>();
+        }
+
+        public string ExportAsJson()
+        {
+            var allData = new ExportedData
+            {
+                Meetings = DbStorage.Meetings,
+                Jobs = DbStorage.Jobs,
+                Brothers = DbStorage.Brothers,
+                JobGroups = DbStorage.JobGroups
+            };
+
+            return allData.ToSerializedJson();
+        }
+
+        public void ImportJson(string json)
+        {
+            var data = json.ToDeserialisedJson<ExportedData>();
+            DbStorage.Meetings = data.Meetings;
+            DbStorage.Jobs = data.Jobs;
+            DbStorage.Brothers = data.Brothers;
+            DbStorage.JobGroups = data.JobGroups;
+            Save();
         }
     }
 }

@@ -149,6 +149,7 @@
             this.Controls.Add(this.bSave);
             this.Controls.Add(this.tbName);
             this.Controls.Add(this.lJobName);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Name = "FJobs";
             this.Text = "Add / Edit Jobs";
             this.ResumeLayout(false);

@@ -13,7 +13,7 @@ namespace KHRota.Classes
         private List<Job> _assignedJobs;
 
         private List<DateTime> _unavailableDates;
-        private List<DayOfWeek> _excludeDays;
+        private List<JobExclusion> _jobExclusions;
         private List<string> _assignedJobGuids;
 
         public Brother()
@@ -33,10 +33,10 @@ namespace KHRota.Classes
 
         public int MinimumMeetingsBetweenJobs { get; set; }
 
-        public List<DayOfWeek> ExcludeDays
+        public List<JobExclusion> JobExclusions
         {
-            get { return _excludeDays ?? (_excludeDays = new List<DayOfWeek>()); }
-            set { _excludeDays = value; }
+            get { return _jobExclusions ?? (_jobExclusions = new List<JobExclusion>()); }
+            set { _jobExclusions = value; }
         }
 
         internal List<Job> AssignedJobs

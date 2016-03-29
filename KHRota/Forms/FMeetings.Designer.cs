@@ -202,6 +202,7 @@
             this.Controls.Add(this.lDateTime);
             this.Controls.Add(this.tbName);
             this.Controls.Add(this.lMeetingName);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Name = "FMeetings";
             this.Text = "Add / Edit Meeting";
             this.ResumeLayout(false);

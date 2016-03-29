@@ -137,5 +137,51 @@ namespace KHRota.Services
 
             return suitableBrothers;
         }
+
+        public int GetBrotherTimesUsedInScheduledPeriod(Brother brother, List<ScheduledMeeting> meetingSchedules)
+        {
+            var jobs = meetingSchedules.SelectMany(m => m.JobAssignments.Where(ja => ja.BrotherGuid == brother.Guid));
+            return jobs.Count();
+        }
+
+        public Job GetBrothersLastJob(Brother brother, List<ScheduledMeeting> meetingSchedules)
+        {
+            var jobs = meetingSchedules.SelectMany(m => m.JobAssignments.Where(ja => ja.BrotherGuid == brother.Guid)).ToList();
+            if (!jobs.Any())
+                return null;
+
+            var lastOrDefault = jobs.LastOrDefault();
+            if (lastOrDefault == null)
+                return null;
+
+            return lastOrDefault.Job;
+        }
+
+        public string GetCsv(MeetingSchedule meetingSchedule)
+        {
+            if (meetingSchedule == null)
+                return "";
+
+            var headings = meetingSchedule.ScheduledMeetings.FirstOrDefault()
+                .JobAssignments.Aggregate("Date,", (current, job) => current + (job.Job.Name + ","));
+            headings += "\r\n";
+
+            var csv = headings;
+            foreach (var scheduledMeeting in meetingSchedule.ScheduledMeetings)
+            {
+                var dateToAdd = scheduledMeeting.DateTime.ToString("dddd dd MMMM");
+                csv += dateToAdd + ",";
+                foreach (var job in scheduledMeeting.JobAssignments)
+                {
+                    var jobToAdd = job.Brother.FirstName + " " + job.Brother.LastName + "(" +
+                                   job.SuitabilityFactor.Weight + ")";
+                    csv += jobToAdd + ",";
+                }
+
+                csv = csv.Substring(0, csv.Length - 1) + "\r\n";
+            }
+
+            return csv;
+        }
     }
 }

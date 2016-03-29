@@ -14,16 +14,5 @@ namespace KHRota.Services
             _meetingService = new MeetingService();
             _scheduleService = new ScheduleService();
         }
-
-        public MeetingSchedule Test()
-        {
-            var meetingSchedule = _scheduleService.GenerateMeetingSchedule(_meetingService.Get(), new SchedulePeriod
-            {
-                Months = Settings.Default.MonthsInAdvance,
-                StartDate = DateTime.Parse("01/03/2016")
-            });
-
-            return meetingSchedule;
-        }
     }
 }

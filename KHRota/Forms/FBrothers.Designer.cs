@@ -42,10 +42,14 @@
             this.lStandInsPerPeriod = new System.Windows.Forms.Label();
             this.numMinMeetingsBetweenJobs = new System.Windows.Forms.NumericUpDown();
             this.lMinMeetingsBetweenJobs = new System.Windows.Forms.Label();
-            this.lExcludeDays = new System.Windows.Forms.Label();
-            this.cblExcludeDays = new System.Windows.Forms.CheckedListBox();
             this.cblAssignedJobs = new System.Windows.Forms.CheckedListBox();
             this.lAssignedJobs = new System.Windows.Forms.Label();
+            this.lExclusions = new System.Windows.Forms.Label();
+            this.bAddExclusion = new System.Windows.Forms.Button();
+            this.bDeleteExclusion = new System.Windows.Forms.Button();
+            this.lvJobExclusions = new System.Windows.Forms.ListView();
+            this.colDay = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.colJob = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             ((System.ComponentModel.ISupportInitialize)(this.numJobsPerPeriod)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numStandInsPerPeriod)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numMinMeetingsBetweenJobs)).BeginInit();
@@ -69,9 +73,9 @@
             // 
             // bSave
             // 
-            this.bSave.Location = new System.Drawing.Point(13, 376);
+            this.bSave.Location = new System.Drawing.Point(12, 399);
             this.bSave.Name = "bSave";
-            this.bSave.Size = new System.Drawing.Size(302, 23);
+            this.bSave.Size = new System.Drawing.Size(304, 22);
             this.bSave.TabIndex = 8;
             this.bSave.Text = "Save";
             this.bSave.UseVisualStyleBackColor = true;
@@ -79,9 +83,9 @@
             // 
             // bCancel
             // 
-            this.bCancel.Location = new System.Drawing.Point(13, 405);
+            this.bCancel.Location = new System.Drawing.Point(12, 428);
             this.bCancel.Name = "bCancel";
-            this.bCancel.Size = new System.Drawing.Size(302, 23);
+            this.bCancel.Size = new System.Drawing.Size(304, 22);
             this.bCancel.TabIndex = 9;
             this.bCancel.Text = "Close";
             this.bCancel.UseVisualStyleBackColor = true;
@@ -186,49 +190,86 @@
             this.lMinMeetingsBetweenJobs.TabIndex = 20;
             this.lMinMeetingsBetweenJobs.Text = "Min Meetings Between Jobs";
             // 
-            // lExcludeDays
-            // 
-            this.lExcludeDays.AutoSize = true;
-            this.lExcludeDays.Location = new System.Drawing.Point(11, 176);
-            this.lExcludeDays.Name = "lExcludeDays";
-            this.lExcludeDays.Size = new System.Drawing.Size(72, 13);
-            this.lExcludeDays.TabIndex = 22;
-            this.lExcludeDays.Text = "Exclude Days";
-            // 
-            // cblExcludeDays
-            // 
-            this.cblExcludeDays.FormattingEnabled = true;
-            this.cblExcludeDays.Location = new System.Drawing.Point(144, 176);
-            this.cblExcludeDays.Name = "cblExcludeDays";
-            this.cblExcludeDays.Size = new System.Drawing.Size(171, 94);
-            this.cblExcludeDays.TabIndex = 6;
-            // 
             // cblAssignedJobs
             // 
             this.cblAssignedJobs.FormattingEnabled = true;
-            this.cblAssignedJobs.Location = new System.Drawing.Point(144, 276);
+            this.cblAssignedJobs.Location = new System.Drawing.Point(143, 299);
             this.cblAssignedJobs.Name = "cblAssignedJobs";
-            this.cblAssignedJobs.Size = new System.Drawing.Size(171, 94);
+            this.cblAssignedJobs.Size = new System.Drawing.Size(173, 94);
             this.cblAssignedJobs.TabIndex = 7;
             // 
             // lAssignedJobs
             // 
             this.lAssignedJobs.AutoSize = true;
-            this.lAssignedJobs.Location = new System.Drawing.Point(11, 276);
+            this.lAssignedJobs.Location = new System.Drawing.Point(10, 299);
             this.lAssignedJobs.Name = "lAssignedJobs";
             this.lAssignedJobs.Size = new System.Drawing.Size(75, 13);
             this.lAssignedJobs.TabIndex = 24;
             this.lAssignedJobs.Text = "Assigned Jobs";
             // 
+            // lExclusions
+            // 
+            this.lExclusions.AutoSize = true;
+            this.lExclusions.Location = new System.Drawing.Point(11, 169);
+            this.lExclusions.Name = "lExclusions";
+            this.lExclusions.Size = new System.Drawing.Size(57, 13);
+            this.lExclusions.TabIndex = 26;
+            this.lExclusions.Text = "Exclusions";
+            // 
+            // bAddExclusion
+            // 
+            this.bAddExclusion.Location = new System.Drawing.Point(143, 270);
+            this.bAddExclusion.Name = "bAddExclusion";
+            this.bAddExclusion.Size = new System.Drawing.Size(80, 23);
+            this.bAddExclusion.TabIndex = 28;
+            this.bAddExclusion.Text = "Add";
+            this.bAddExclusion.UseVisualStyleBackColor = true;
+            this.bAddExclusion.Click += new System.EventHandler(this.bAddExclusion_Click);
+            // 
+            // bDeleteExclusion
+            // 
+            this.bDeleteExclusion.Location = new System.Drawing.Point(236, 270);
+            this.bDeleteExclusion.Name = "bDeleteExclusion";
+            this.bDeleteExclusion.Size = new System.Drawing.Size(80, 23);
+            this.bDeleteExclusion.TabIndex = 29;
+            this.bDeleteExclusion.Text = "Delete";
+            this.bDeleteExclusion.UseVisualStyleBackColor = true;
+            this.bDeleteExclusion.Click += new System.EventHandler(this.bDeleteExclusion_Click);
+            // 
+            // lvJobExclusions
+            // 
+            this.lvJobExclusions.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.colDay,
+            this.colJob});
+            this.lvJobExclusions.Location = new System.Drawing.Point(143, 169);
+            this.lvJobExclusions.MultiSelect = false;
+            this.lvJobExclusions.Name = "lvJobExclusions";
+            this.lvJobExclusions.Size = new System.Drawing.Size(172, 95);
+            this.lvJobExclusions.TabIndex = 30;
+            this.lvJobExclusions.UseCompatibleStateImageBehavior = false;
+            this.lvJobExclusions.View = System.Windows.Forms.View.Details;
+            // 
+            // colDay
+            // 
+            this.colDay.Text = "Day";
+            this.colDay.Width = 53;
+            // 
+            // colJob
+            // 
+            this.colJob.Text = "Job";
+            this.colJob.Width = 114;
+            // 
             // FBrothers
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(329, 442);
+            this.ClientSize = new System.Drawing.Size(329, 465);
+            this.Controls.Add(this.lvJobExclusions);
+            this.Controls.Add(this.bDeleteExclusion);
+            this.Controls.Add(this.bAddExclusion);
+            this.Controls.Add(this.lExclusions);
             this.Controls.Add(this.cblAssignedJobs);
             this.Controls.Add(this.lAssignedJobs);
-            this.Controls.Add(this.cblExcludeDays);
-            this.Controls.Add(this.lExcludeDays);
             this.Controls.Add(this.numMinMeetingsBetweenJobs);
             this.Controls.Add(this.lMinMeetingsBetweenJobs);
             this.Controls.Add(this.numStandInsPerPeriod);
@@ -243,6 +284,7 @@
             this.Controls.Add(this.bSave);
             this.Controls.Add(this.tbFirstName);
             this.Controls.Add(this.lFirstName);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Name = "FBrothers";
             this.Text = "Add / Edit Brother";
             ((System.ComponentModel.ISupportInitialize)(this.numJobsPerPeriod)).EndInit();
@@ -269,9 +311,13 @@
         private System.Windows.Forms.Label lStandInsPerPeriod;
         private System.Windows.Forms.NumericUpDown numMinMeetingsBetweenJobs;
         private System.Windows.Forms.Label lMinMeetingsBetweenJobs;
-        private System.Windows.Forms.Label lExcludeDays;
-        private System.Windows.Forms.CheckedListBox cblExcludeDays;
         private System.Windows.Forms.CheckedListBox cblAssignedJobs;
         private System.Windows.Forms.Label lAssignedJobs;
+        private System.Windows.Forms.Label lExclusions;
+        private System.Windows.Forms.Button bAddExclusion;
+        private System.Windows.Forms.Button bDeleteExclusion;
+        private System.Windows.Forms.ListView lvJobExclusions;
+        private System.Windows.Forms.ColumnHeader colDay;
+        private System.Windows.Forms.ColumnHeader colJob;
     }
 }
