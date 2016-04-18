@@ -3,9 +3,18 @@
   <Profiles />
   <Settings>
     <Setting Name="MonthsInAdvance" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">3</Value>
+      <Value Profile="(Default)">1</Value>
     </Setting>
     <Setting Name="SavedMeetings" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="SavedJobs" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="SavedBrothers" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="SavedJobGroups" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
   </Settings>

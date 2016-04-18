@@ -25,7 +25,7 @@ namespace KHRota.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("3")]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
         public int MonthsInAdvance {
             get {
                 return ((int)(this["MonthsInAdvance"]));
@@ -46,48 +46,39 @@ namespace KHRota.Properties {
                 this["SavedMeetings"] = value;
             }
         }
-
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string SavedJobs
-        {
-            get
-            {
+        public string SavedJobs {
+            get {
                 return ((string)(this["SavedJobs"]));
             }
-            set
-            {
+            set {
                 this["SavedJobs"] = value;
             }
         }
-
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string SavedBrothers
-        {
-            get
-            {
+        public string SavedBrothers {
+            get {
                 return ((string)(this["SavedBrothers"]));
             }
-            set
-            {
+            set {
                 this["SavedBrothers"] = value;
             }
         }
-
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string SavedJobGroups
-        {
-            get
-            {
+        public string SavedJobGroups {
+            get {
                 return ((string)(this["SavedJobGroups"]));
             }
-            set
-            {
+            set {
                 this["SavedJobGroups"] = value;
             }
         }

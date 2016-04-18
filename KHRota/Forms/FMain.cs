@@ -1,10 +1,13 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Drawing;
+using System.Drawing.Printing;
 using System.IO;
 using System.Windows.Forms;
 using KHRota.Classes;
 using KHRota.Properties;
 using KHRota.Services;
+using Microsoft.VisualBasic;
 
 namespace KHRota.Forms
 {
@@ -35,14 +38,30 @@ namespace KHRota.Forms
         {
             _generatedMeetingSchedule = null;
             SetReportPanelsVisibility();
-
-            _generatedMeetingSchedule = _scheduleService.GenerateMeetingSchedule(_meetingService.Get(), new SchedulePeriod
+            using (FDatePicker datePicker = new FDatePicker())
             {
-                Months = Settings.Default.MonthsInAdvance,
-                StartDate = DateTime.Parse("01/03/2016")
-            });
-
+                datePicker.ShowDialog(this);
+                if (datePicker.DialogResult == DialogResult.OK)
+                {
+                    _generatedMeetingSchedule = _scheduleService.GenerateMeetingSchedule(_meetingService.Get(),
+                        new SchedulePeriod
+                        {
+                            Months = Settings.Default.MonthsInAdvance,
+                            StartDate = DateTime.Parse(datePicker.DateTimeResult.ToString("d"))
+                        });
+                }
+            }
             SetReportPanelsVisibility();
+        }
+
+        private Point GetScreenPoint()
+        {
+            var screen = Screen.FromControl(this);
+            var workingArea = screen.WorkingArea;
+            var x = Math.Max(workingArea.X, workingArea.X + (workingArea.Width - Width) / 2);
+            var y = Math.Max(workingArea.Y, workingArea.Y + (workingArea.Height - Height) / 2);
+
+            return new Point(x, y);
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -101,11 +120,20 @@ namespace KHRota.Forms
 
         private void bPrint_Click(object sender, EventArgs e)
         {
-            var csv = _scheduleService.GetCsv(_generatedMeetingSchedule);
-            using (var form = new FDisplayReport(csv))
+            using (var form = new FDisplayReport(_generatedMeetingSchedule))
             {
                 form.ShowDialog(this);
             }
+
+            /*var printDialog = new PrintDialog();
+            var printDocument = new PrintDocument();
+            printDialog.Document = printDocument; //add the document to the dialog box...        
+            printDocument.PrintPage += GetPrintableSchedule; 
+            var result = printDialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                printDocument.Print();
+            }*/
         }
 
         private void bExportData_Click(object sender, EventArgs e)
