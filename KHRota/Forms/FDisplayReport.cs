@@ -176,25 +176,25 @@ namespace KHRota.Forms
 
                 var totalHeight = 0;
                 Font font = null;
-                var index = 0;
+                DataGridView lastGrid = null;
                 foreach (var jobGroup in jobGroups.OrderBy(j => j.Name))
                 {
                     var grid = GetGrid(jobGroup);
                     pReport.Controls.Add(grid);
                     totalHeight += grid.Height;
                     font = grid.Font;
-                    PrintGrid(sender, e, grid, index);
-                    index++;
+                    PrintGrid(sender, e, grid, lastGrid);
+                    lastGrid = grid;
                     pReport.Controls.Remove(grid);
                 }
 
-                totalHeight += baseHeightSpace;
+                //totalHeight += baseHeightSpace;
                 var stringsToPrint = new Dictionary<string, bool>
                 {
                     {"Please ensure that you arrive for the meeting at least 20 minutes before it starts.", true},
                     {"If you can not complete your assignment please contact as follows:", true},
-                    {"Bro Kevin Normington - 07429 326193 (Sound Team)", false},
-                    {"Bro Jim Cambage - 07757 712663 (Attendants)", false}
+                    {"Bro Jim Cambage - 07757 712663 (Attendants)", false},
+                    {"Bro Kevin Normington - 07429 326193 (Sound Team)", false}
                 };
 
                 var boldFont = new Font(font, FontStyle.Bold);
@@ -204,7 +204,7 @@ namespace KHRota.Forms
                     var text = stringsToPrint.Keys.ToList()[i];
 
                     e.Graphics.DrawString(text, printBold ? boldFont : font, Brushes.Black, 0,
-                        totalHeight + (baseHeightSpace*i));
+                        totalHeight-(baseHeightSpace*2) + (i == 0 ? 0 : baseHeightSpace*i));
                 }
             }
             finally
@@ -250,14 +250,14 @@ namespace KHRota.Forms
             }
         }
 
-        private void PrintGrid(object sender, PrintPageEventArgs e, DataGridView grid, int gridIndex)
+        private void PrintGrid(object sender, PrintPageEventArgs e, DataGridView grid, DataGridView previousGridView)
         {
             try
             {
                 //Set the left margin
                 var iLeftMargin = e.MarginBounds.Left;
                 //Set the top margin
-                var iTopMargin = gridIndex == 0 ? e.MarginBounds.Top : grid.Height + e.MarginBounds.Top + 20;
+                var iTopMargin = previousGridView == null ? e.MarginBounds.Top : previousGridView.Height - 50;
                 //Whether more pages have to print or not
                 var iTmpWidth = 0;
                 var iRow = 0;
