@@ -43,7 +43,6 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
@@ -61,15 +60,6 @@
     <Compile Include="Classes\JobGroup.cs" />
     <Compile Include="Classes\ProgressEventArgs.cs" />
     <Compile Include="Classes\ScheduledMeetingReport.cs" />
-    <Compile Include="Data\DataSet1.cs">
-      <DependentUpon>DataSet1.xsd</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Data\DataSet1.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>DataSet1.xsd</DependentUpon>
-    </Compile>
     <Compile Include="Data\DbStorage.cs" />
     <Compile Include="Forms\BaseForm.cs">
       <SubType>Form</SubType>
@@ -170,7 +160,6 @@
     <EmbeddedResource Include="Forms\FMeetings.resx">
       <DependentUpon>FMeetings.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Report1.rdlc" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -180,17 +169,6 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <None Include="Data\DataSet1.xsc">
-      <DependentUpon>DataSet1.xsd</DependentUpon>
-    </None>
-    <None Include="Data\DataSet1.xsd">
-      <SubType>Designer</SubType>
-      <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>DataSet1.Designer.cs</LastGenOutput>
-    </None>
-    <None Include="Data\DataSet1.xss">
-      <DependentUpon>DataSet1.xsd</DependentUpon>
-    </None>
     <None Include="packages.config" />
     <None Include="Properties\DataSources\KHRota.Classes.ScheduledMeetingsReport.datasource" />
     <None Include="Properties\Settings.settings">
