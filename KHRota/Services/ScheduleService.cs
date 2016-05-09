@@ -26,8 +26,13 @@ namespace KHRota.Services
 
             foreach (var meeting in meetings)
             {
-                var numberOfMeetingsInPeriod = DateTimeHelper.CountDays(meeting.DayOfWeek, DateTime.Now,
-                    DateTime.Now.AddMonths(period.Months));
+                var startDate = period.StartDate.AddMonths(period.Months);
+                var endDate = new DateTime(startDate.Year, startDate.Month, 1, 0, 0, 0, startDate.Kind);
+                //If we generate the schedule on the 27/04 then it would reset it back to 01/05. This will ensure it goes forward until 01/06
+                if (endDate < startDate.AddMonths(period.Months))
+                    endDate = new DateTime(startDate.Year, startDate.AddMonths(1).Month, 1, 0, 0, 0, startDate.Kind);
+
+                var numberOfMeetingsInPeriod = DateTimeHelper.CountDays(meeting.DayOfWeek, period.StartDate, endDate);
 
                 for (var i = 0; i < numberOfMeetingsInPeriod; i++)
                 {
