@@ -90,7 +90,8 @@ namespace KHRota.Forms
             brother.StandInsPerPeriod = Convert.ToInt32(numStandInsPerPeriod.Text);
             brother.MinimumMeetingsBetweenJobs = Convert.ToInt32(numMinMeetingsBetweenJobs.Text);
             brother.AssignedJobs = _jobService.Get().Where(j => cblAssignedJobs.CheckedItems.Contains(j)).ToList();
-            
+            brother.EmailAddress = tbEmailAddress.Text;
+
             /*brother.ExcludeDays.Clear();
             foreach (string t in cblExcludeDays.CheckedItems)
             {
@@ -101,7 +102,7 @@ namespace KHRota.Forms
 
             _brotherService.Update(brother);
             DbService.Save();
-            LoadBrotherList(brother);
+            LoadBrotherList(null);
         }
 
         private void cbEditMeeting_SelectedIndexChanged(object sender, EventArgs e)
@@ -114,6 +115,7 @@ namespace KHRota.Forms
         {
             tbFirstName.Text = brother.FirstName == "New Brother ..." ? "" : brother.FirstName;
             tbLastName.Text = brother.LastName;
+            tbEmailAddress.Text = brother.EmailAddress;
             if (!string.IsNullOrEmpty(brother.Guid))
             {
                 numJobsPerPeriod.Text = brother.JobsPerPeriod.ToString();

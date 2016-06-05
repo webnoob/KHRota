@@ -5,8 +5,14 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Printing;
 using System.Linq;
+using System.Net.Mail;
+using System.Text;
 using System.Windows.Forms;
 using KHRota.Classes;
+using KHRota.Properties;
+using BorderStyle = System.Windows.Forms.BorderStyle;
+
+//NOTE: Pretty much all the code in this file sucks :) It's quite specific to our needs for the reporting.
 
 namespace KHRota.Forms
 {
@@ -344,6 +350,108 @@ namespace KHRota.Forms
                 new List<JobGroup>(
                     _meetingSchedule.ScheduledMeetings.SelectMany(s => s.JobAssignments.Select(j => j.Job.JobGroup)))
                     .Distinct().ToList();
+        }
+
+        private void bEmailToAllBrothers_Click(object sender, EventArgs e)
+        {
+            Cursor = Cursors.WaitCursor;
+            try
+            {
+                var sb = new StringBuilder();
+                var jobGroups = GetJobGroups();
+                foreach (var jobGroup in jobGroups.OrderBy(j => j.Name))
+                {
+                    sb.Append("<table width='100%' style='border-collapse:collapse;'>");
+
+                    var grid = GetGrid(jobGroup);
+                    pReport.Controls.Add(grid);
+
+                    sb.Append("<tr>");
+                    for (var i = 0; i < grid.Columns.Count; i++)
+                    {
+                        DataGridViewColumn column = grid.Columns[i];
+                        sb.Append(string.Format("<th align='left' border='none'>{0}</th>", column.HeaderText));
+                    }
+                    sb.Append("<tr>");
+
+                    for (var i = 0; i < grid.Rows.Count; i++)
+                    {
+                        DataGridViewRow row = grid.Rows[i]; 
+                        sb.Append("<tr>");
+                        for (var j = 0; j < row.Cells.Count; j++)
+                        {
+                            DataGridViewCell cell = row.Cells[j];
+                            if (j > 1)
+                                sb.Append(string.Format("<td style='border:1px solid black;border-right:1px solid black; '>{0}</td>", cell.FormattedValue));
+                            else
+                                sb.Append(string.Format("<td>{0}</td>", cell.FormattedValue));
+                        }
+                        sb.Append("<tr>");
+                    }
+
+                    pReport.Controls.Remove(grid);
+                    sb.Append("</table>");
+                    sb.Append("<br/>");
+                }
+
+                var gridString = sb.ToString();
+                sb.Clear();
+                sb.Append("<p><b>Please ensure you arrive for the meeting at least 20 minutes before it starts.</b></p><br/>");
+                sb.Append("<p><b>If you cannot complete your assignment please contact as follows:</b></p><br/>");
+                sb.Append("<p>Bro Jim Cambage - 07757 712663 (Attendants)</p><br/>");
+                sb.Append("<p>Bro Kevin Normington - 07429 326193 (Sound Team)</p><br/>");
+                var footerString = sb.ToString();
+
+
+                var client = new SmtpClient
+                {
+                    Port = 587,
+                    Host = "smtp.gmail.com",
+                    EnableSsl = true,
+                    Timeout = 10000,
+                    DeliveryMethod = SmtpDeliveryMethod.Network,
+                    UseDefaultCredentials = false,
+                    Credentials = new System.Net.NetworkCredential(Settings.Default.SendEmailUsername, Settings.Default.SendEmailPassword)
+                };
+
+                var brothersWithEmailAddresses = _meetingSchedule.ScheduledMeetings.SelectMany(
+                    m =>
+                        m.JobAssignments.Select(j => j.Brother)
+                            .Where(b => !string.IsNullOrEmpty(b.EmailAddress)));
+                foreach (var brother in brothersWithEmailAddresses.Distinct(new BrotherEqualityComparator()))
+                {
+                    var mail = new MailMessage("KHRota@no-reply.com", brother.EmailAddress)
+                    {
+                        Subject = string.Format("Sound / Attendant Rota for Month [{0}]", _meetingSchedule.ScheduledMeetings.LastOrDefault().DateTime.ToString("Y")),
+                        Body = HighlightBrother(gridString, brother) + footerString,
+                        IsBodyHtml = true
+                    };
+                    client.Send(mail);
+                }
+            }
+            finally
+            {
+                Cursor = DefaultCursor;
+            }
+        }
+
+        private string HighlightBrother(string gridString, Brother brother)
+        {
+            return gridString.Replace(brother.FullName,
+                string.Format("<span style='background-color: #ffff66;width:100%'><b>{0}</b></span>", brother.FullName));
+        }
+    }
+
+    internal class BrotherEqualityComparator : IEqualityComparer<Brother>
+    {
+        public bool Equals(Brother x, Brother y)
+        {
+            return x.Guid == y.Guid;
+        }
+
+        public int GetHashCode(Brother obj)
+        {
+            return base.GetHashCode();
         }
     }
 }

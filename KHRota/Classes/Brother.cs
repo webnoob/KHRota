@@ -33,6 +33,8 @@ namespace KHRota.Classes
 
         public int MinimumMeetingsBetweenJobs { get; set; }
 
+        public string EmailAddress { get; set; }
+
         public List<JobExclusion> JobExclusions
         {
             get { return _jobExclusions ?? (_jobExclusions = new List<JobExclusion>()); }

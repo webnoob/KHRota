@@ -50,6 +50,8 @@
             this.lvJobExclusions = new System.Windows.Forms.ListView();
             this.colDay = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colJob = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.tbEmailAddress = new System.Windows.Forms.TextBox();
+            this.lEmailAddress = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.numJobsPerPeriod)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numStandInsPerPeriod)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numMinMeetingsBetweenJobs)).BeginInit();
@@ -73,7 +75,7 @@
             // 
             // bSave
             // 
-            this.bSave.Location = new System.Drawing.Point(12, 399);
+            this.bSave.Location = new System.Drawing.Point(12, 425);
             this.bSave.Name = "bSave";
             this.bSave.Size = new System.Drawing.Size(304, 22);
             this.bSave.TabIndex = 8;
@@ -83,7 +85,7 @@
             // 
             // bCancel
             // 
-            this.bCancel.Location = new System.Drawing.Point(12, 428);
+            this.bCancel.Location = new System.Drawing.Point(12, 454);
             this.bCancel.Name = "bCancel";
             this.bCancel.Size = new System.Drawing.Size(304, 22);
             this.bCancel.TabIndex = 9;
@@ -130,7 +132,7 @@
             // lJobsPerPeriod
             // 
             this.lJobsPerPeriod.AutoSize = true;
-            this.lJobsPerPeriod.Location = new System.Drawing.Point(11, 98);
+            this.lJobsPerPeriod.Location = new System.Drawing.Point(11, 124);
             this.lJobsPerPeriod.Name = "lJobsPerPeriod";
             this.lJobsPerPeriod.Size = new System.Drawing.Size(81, 13);
             this.lJobsPerPeriod.TabIndex = 15;
@@ -138,7 +140,7 @@
             // 
             // numJobsPerPeriod
             // 
-            this.numJobsPerPeriod.Location = new System.Drawing.Point(241, 91);
+            this.numJobsPerPeriod.Location = new System.Drawing.Point(241, 117);
             this.numJobsPerPeriod.Name = "numJobsPerPeriod";
             this.numJobsPerPeriod.Size = new System.Drawing.Size(74, 20);
             this.numJobsPerPeriod.TabIndex = 3;
@@ -150,7 +152,7 @@
             // 
             // numStandInsPerPeriod
             // 
-            this.numStandInsPerPeriod.Location = new System.Drawing.Point(241, 117);
+            this.numStandInsPerPeriod.Location = new System.Drawing.Point(241, 143);
             this.numStandInsPerPeriod.Name = "numStandInsPerPeriod";
             this.numStandInsPerPeriod.Size = new System.Drawing.Size(74, 20);
             this.numStandInsPerPeriod.TabIndex = 4;
@@ -163,7 +165,7 @@
             // lStandInsPerPeriod
             // 
             this.lStandInsPerPeriod.AutoSize = true;
-            this.lStandInsPerPeriod.Location = new System.Drawing.Point(11, 124);
+            this.lStandInsPerPeriod.Location = new System.Drawing.Point(11, 150);
             this.lStandInsPerPeriod.Name = "lStandInsPerPeriod";
             this.lStandInsPerPeriod.Size = new System.Drawing.Size(104, 13);
             this.lStandInsPerPeriod.TabIndex = 18;
@@ -171,7 +173,7 @@
             // 
             // numMinMeetingsBetweenJobs
             // 
-            this.numMinMeetingsBetweenJobs.Location = new System.Drawing.Point(241, 143);
+            this.numMinMeetingsBetweenJobs.Location = new System.Drawing.Point(241, 169);
             this.numMinMeetingsBetweenJobs.Name = "numMinMeetingsBetweenJobs";
             this.numMinMeetingsBetweenJobs.Size = new System.Drawing.Size(74, 20);
             this.numMinMeetingsBetweenJobs.TabIndex = 5;
@@ -184,7 +186,7 @@
             // lMinMeetingsBetweenJobs
             // 
             this.lMinMeetingsBetweenJobs.AutoSize = true;
-            this.lMinMeetingsBetweenJobs.Location = new System.Drawing.Point(11, 150);
+            this.lMinMeetingsBetweenJobs.Location = new System.Drawing.Point(11, 176);
             this.lMinMeetingsBetweenJobs.Name = "lMinMeetingsBetweenJobs";
             this.lMinMeetingsBetweenJobs.Size = new System.Drawing.Size(140, 13);
             this.lMinMeetingsBetweenJobs.TabIndex = 20;
@@ -193,7 +195,7 @@
             // cblAssignedJobs
             // 
             this.cblAssignedJobs.FormattingEnabled = true;
-            this.cblAssignedJobs.Location = new System.Drawing.Point(143, 299);
+            this.cblAssignedJobs.Location = new System.Drawing.Point(143, 325);
             this.cblAssignedJobs.Name = "cblAssignedJobs";
             this.cblAssignedJobs.Size = new System.Drawing.Size(173, 94);
             this.cblAssignedJobs.TabIndex = 7;
@@ -201,7 +203,7 @@
             // lAssignedJobs
             // 
             this.lAssignedJobs.AutoSize = true;
-            this.lAssignedJobs.Location = new System.Drawing.Point(10, 299);
+            this.lAssignedJobs.Location = new System.Drawing.Point(10, 325);
             this.lAssignedJobs.Name = "lAssignedJobs";
             this.lAssignedJobs.Size = new System.Drawing.Size(75, 13);
             this.lAssignedJobs.TabIndex = 24;
@@ -210,7 +212,7 @@
             // lExclusions
             // 
             this.lExclusions.AutoSize = true;
-            this.lExclusions.Location = new System.Drawing.Point(11, 169);
+            this.lExclusions.Location = new System.Drawing.Point(11, 195);
             this.lExclusions.Name = "lExclusions";
             this.lExclusions.Size = new System.Drawing.Size(57, 13);
             this.lExclusions.TabIndex = 26;
@@ -218,7 +220,7 @@
             // 
             // bAddExclusion
             // 
-            this.bAddExclusion.Location = new System.Drawing.Point(143, 270);
+            this.bAddExclusion.Location = new System.Drawing.Point(143, 296);
             this.bAddExclusion.Name = "bAddExclusion";
             this.bAddExclusion.Size = new System.Drawing.Size(80, 23);
             this.bAddExclusion.TabIndex = 28;
@@ -228,7 +230,7 @@
             // 
             // bDeleteExclusion
             // 
-            this.bDeleteExclusion.Location = new System.Drawing.Point(236, 270);
+            this.bDeleteExclusion.Location = new System.Drawing.Point(236, 296);
             this.bDeleteExclusion.Name = "bDeleteExclusion";
             this.bDeleteExclusion.Size = new System.Drawing.Size(80, 23);
             this.bDeleteExclusion.TabIndex = 29;
@@ -241,7 +243,7 @@
             this.lvJobExclusions.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.colDay,
             this.colJob});
-            this.lvJobExclusions.Location = new System.Drawing.Point(143, 169);
+            this.lvJobExclusions.Location = new System.Drawing.Point(143, 195);
             this.lvJobExclusions.MultiSelect = false;
             this.lvJobExclusions.Name = "lvJobExclusions";
             this.lvJobExclusions.Size = new System.Drawing.Size(172, 95);
@@ -259,11 +261,29 @@
             this.colJob.Text = "Job";
             this.colJob.Width = 114;
             // 
+            // tbEmailAddress
+            // 
+            this.tbEmailAddress.Location = new System.Drawing.Point(144, 91);
+            this.tbEmailAddress.Name = "tbEmailAddress";
+            this.tbEmailAddress.Size = new System.Drawing.Size(171, 20);
+            this.tbEmailAddress.TabIndex = 31;
+            // 
+            // lEmailAddress
+            // 
+            this.lEmailAddress.AutoSize = true;
+            this.lEmailAddress.Location = new System.Drawing.Point(11, 98);
+            this.lEmailAddress.Name = "lEmailAddress";
+            this.lEmailAddress.Size = new System.Drawing.Size(73, 13);
+            this.lEmailAddress.TabIndex = 32;
+            this.lEmailAddress.Text = "Email Address";
+            // 
             // FBrothers
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(329, 465);
+            this.ClientSize = new System.Drawing.Size(329, 488);
+            this.Controls.Add(this.tbEmailAddress);
+            this.Controls.Add(this.lEmailAddress);
             this.Controls.Add(this.lvJobExclusions);
             this.Controls.Add(this.bDeleteExclusion);
             this.Controls.Add(this.bAddExclusion);
@@ -319,5 +339,7 @@
         private System.Windows.Forms.ListView lvJobExclusions;
         private System.Windows.Forms.ColumnHeader colDay;
         private System.Windows.Forms.ColumnHeader colJob;
+        private System.Windows.Forms.TextBox tbEmailAddress;
+        private System.Windows.Forms.Label lEmailAddress;
     }
 }
