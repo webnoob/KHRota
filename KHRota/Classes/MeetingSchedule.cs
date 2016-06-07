@@ -6,9 +6,12 @@ using System.Threading.Tasks;
 
 namespace KHRota.Classes
 {
-    public class MeetingSchedule
+    [Serializable]
+    public class MeetingSchedule : BaseEntity
     {
         private List<ScheduledMeeting> _scheduledMeetings;
+
+        public DateTime StartDate { get; set; }
 
         public List<ScheduledMeeting> ScheduledMeetings
         {

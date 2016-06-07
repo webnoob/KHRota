@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using KHPlayer.Extensions;
 using KHRota.Classes;
 using KHRota.Data;
@@ -17,7 +19,8 @@ namespace KHRota.Services
             public List<Meeting> Meetings { get; set; }
             public List<Job> Jobs { get; set; }
             public List<Brother> Brothers { get; set; }
-            public List<JobGroup> JobGroups { get; set; } 
+            public List<JobGroup> JobGroups { get; set; }
+            public List<MeetingSchedule> ScheduleHistory { get; set; } 
         }
 
         public void Save()

@@ -82,5 +82,29 @@ namespace KHRota.Properties {
                 this["SavedJobGroups"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string SendEmailUsername {
+            get {
+                return ((string)(this["SendEmailUsername"]));
+            }
+            set {
+                this["SendEmailUsername"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string SendEmailPassword {
+            get {
+                return ((string)(this["SendEmailPassword"]));
+            }
+            set {
+                this["SendEmailPassword"] = value;
+            }
+        }
     }
 }

@@ -89,7 +89,7 @@ namespace KHRota.Forms
             brother.JobsPerPeriod = Convert.ToInt32(numJobsPerPeriod.Text);
             brother.StandInsPerPeriod = Convert.ToInt32(numStandInsPerPeriod.Text);
             brother.MinimumMeetingsBetweenJobs = Convert.ToInt32(numMinMeetingsBetweenJobs.Text);
-            brother.AssignedJobs = _jobService.Get().Where(j => cblAssignedJobs.CheckedItems.Contains(j)).ToList();
+            brother.AssignedJobs = _jobService.Get().Where(j => cblAssignedJobs.CheckedItems.Contains(j)).Distinct().ToList();
             brother.EmailAddress = tbEmailAddress.Text;
 
             /*brother.ExcludeDays.Clear();

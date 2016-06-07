@@ -28,6 +28,7 @@ namespace KHRota.Forms
         private int iHeaderHeight; //Used for the header height
         private int iTotalWidth; //
         private StringFormat strFormat; //Used to format the grid rows.
+        private SmtpClient _smtpClient;
 
         public FDisplayReport(MeetingSchedule meetingSchedule)
         {
@@ -35,7 +36,18 @@ namespace KHRota.Forms
 
             InitializeComponent();
             LoadJobGroups();
-            //LoadReport();
+
+            _smtpClient = new SmtpClient
+            {
+                Port = 587,
+                Host = "smtp.gmail.com",
+                EnableSsl = true,
+                Timeout = 10000,
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                UseDefaultCredentials = false,
+                Credentials = new System.Net.NetworkCredential(Settings.Default.SendEmailUsername, Settings.Default.SendEmailPassword)
+            };
+
         }
 
         private void LoadJobGroups()
@@ -357,62 +369,8 @@ namespace KHRota.Forms
             Cursor = Cursors.WaitCursor;
             try
             {
-                var sb = new StringBuilder();
-                var jobGroups = GetJobGroups();
-                foreach (var jobGroup in jobGroups.OrderBy(j => j.Name))
-                {
-                    sb.Append("<table width='100%' style='border-collapse:collapse;'>");
-
-                    var grid = GetGrid(jobGroup);
-                    pReport.Controls.Add(grid);
-
-                    sb.Append("<tr>");
-                    for (var i = 0; i < grid.Columns.Count; i++)
-                    {
-                        DataGridViewColumn column = grid.Columns[i];
-                        sb.Append(string.Format("<th align='left' border='none'>{0}</th>", column.HeaderText));
-                    }
-                    sb.Append("<tr>");
-
-                    for (var i = 0; i < grid.Rows.Count; i++)
-                    {
-                        DataGridViewRow row = grid.Rows[i]; 
-                        sb.Append("<tr>");
-                        for (var j = 0; j < row.Cells.Count; j++)
-                        {
-                            DataGridViewCell cell = row.Cells[j];
-                            if (j > 1)
-                                sb.Append(string.Format("<td style='border:1px solid black;border-right:1px solid black; '>{0}</td>", cell.FormattedValue));
-                            else
-                                sb.Append(string.Format("<td>{0}</td>", cell.FormattedValue));
-                        }
-                        sb.Append("<tr>");
-                    }
-
-                    pReport.Controls.Remove(grid);
-                    sb.Append("</table>");
-                    sb.Append("<br/>");
-                }
-
-                var gridString = sb.ToString();
-                sb.Clear();
-                sb.Append("<p><b>Please ensure you arrive for the meeting at least 20 minutes before it starts.</b></p><br/>");
-                sb.Append("<p><b>If you cannot complete your assignment please contact as follows:</b></p><br/>");
-                sb.Append("<p>Bro Jim Cambage - 07757 712663 (Attendants)</p><br/>");
-                sb.Append("<p>Bro Kevin Normington - 07429 326193 (Sound Team)</p><br/>");
-                var footerString = sb.ToString();
-
-
-                var client = new SmtpClient
-                {
-                    Port = 587,
-                    Host = "smtp.gmail.com",
-                    EnableSsl = true,
-                    Timeout = 10000,
-                    DeliveryMethod = SmtpDeliveryMethod.Network,
-                    UseDefaultCredentials = false,
-                    Credentials = new System.Net.NetworkCredential(Settings.Default.SendEmailUsername, Settings.Default.SendEmailPassword)
-                };
+                var gridString = GetEmailGrid();
+                var footerString = GetEmailFooterString();
 
                 var brothersWithEmailAddresses = _meetingSchedule.ScheduledMeetings.SelectMany(
                     m =>
@@ -420,13 +378,7 @@ namespace KHRota.Forms
                             .Where(b => !string.IsNullOrEmpty(b.EmailAddress)));
                 foreach (var brother in brothersWithEmailAddresses.Distinct(new BrotherEqualityComparator()))
                 {
-                    var mail = new MailMessage("KHRota@no-reply.com", brother.EmailAddress)
-                    {
-                        Subject = string.Format("Sound / Attendant Rota for Month [{0}]", _meetingSchedule.ScheduledMeetings.LastOrDefault().DateTime.ToString("Y")),
-                        Body = HighlightBrother(gridString, brother) + footerString,
-                        IsBodyHtml = true
-                    };
-                    client.Send(mail);
+                    SendEmailToBrother(brother, HighlightBrother(gridString, brother) + footerString);
                 }
             }
             finally
@@ -435,10 +387,103 @@ namespace KHRota.Forms
             }
         }
 
+        private string GetEmailFooterString()
+        {
+            var sb = new StringBuilder();
+            sb.Append("<p><b>Please ensure you arrive for the meeting at least 20 minutes before it starts.</b></p><br/>");
+            sb.Append("<p><b>If you cannot complete your assignment please contact as follows:</b></p><br/>");
+            sb.Append("<p>Bro Jim Cambage - 07757 712663 (Attendants)</p><br/>");
+            sb.Append("<p>Bro Kevin Normington - 07429 326193 (Sound Team)</p><br/>");
+            var footerString = sb.ToString();
+            return footerString;
+        }
+
+        private string GetEmailGrid()
+        {
+            var sb = new StringBuilder();
+            var jobGroups = GetJobGroups();
+            foreach (var jobGroup in jobGroups.OrderBy(j => j.Name))
+            {
+                sb.Append("<table width='100%' style='border-collapse:collapse;'>");
+
+                var grid = GetGrid(jobGroup);
+                pReport.Controls.Add(grid);
+
+                sb.Append("<tr>");
+                for (var i = 0; i < grid.Columns.Count; i++)
+                {
+                    DataGridViewColumn column = grid.Columns[i];
+                    sb.Append(string.Format("<th align='left' border='none'>{0}</th>", column.HeaderText));
+                }
+                sb.Append("<tr>");
+
+                for (var i = 0; i < grid.Rows.Count; i++)
+                {
+                    DataGridViewRow row = grid.Rows[i];
+                    sb.Append("<tr>");
+                    for (var j = 0; j < row.Cells.Count; j++)
+                    {
+                        DataGridViewCell cell = row.Cells[j];
+                        if (j > 1)
+                            sb.Append(string.Format("<td style='border:1px solid black;border-right:1px solid black; '>{0}</td>", cell.FormattedValue));
+                        else
+                            sb.Append(string.Format("<td>{0}</td>", cell.FormattedValue));
+                    }
+                    sb.Append("<tr>");
+                }
+
+                pReport.Controls.Remove(grid);
+                sb.Append("</table>");
+                sb.Append("<br/>");
+            }
+
+            var gridString = sb.ToString();
+            return gridString;
+        }
+
         private string HighlightBrother(string gridString, Brother brother)
         {
             return gridString.Replace(brother.FullName,
                 string.Format("<span style='background-color: #ffff66;width:100%'><b>{0}</b></span>", brother.FullName));
+        }
+
+        private void bEmailToBrother_Click(object sender, EventArgs e)
+        {
+            using (var form = new FSelectBrother())
+            {
+                form.ShowDialog(this);
+                if (form.DialogResult != DialogResult.OK)
+                    return;
+                Cursor = Cursors.WaitCursor;
+                try
+                {
+                    SendEmailToBrother(form.Brother,
+                        HighlightBrother(GetEmailGrid(), form.Brother) + GetEmailFooterString());
+                }
+                finally
+                {
+                    Cursor = Cursors.Default;
+                }
+            }
+        }
+
+        private void SendEmailToBrother(Brother brother, string body)
+        {
+            if (brother.EmailAddress == null)
+                return;
+
+            var mail = new MailMessage("KHRota@no-reply.com", brother.EmailAddress)
+            {
+                Subject =
+                    string.Format("Sound / Attendant Rota for Month [{0}]",
+                        _meetingSchedule.StartDate.ToString("dd-MM-yyyy")),
+                Body =
+                    string.Format(
+                        "Hi {0},<br/><br/>Here is the rota for your Kingdom Hall assignments. If you have any problems, please see the contact details at the bottom of the email.<br/><br/>{1}",
+                        brother.FirstName, body),
+                IsBodyHtml = true
+            };
+            _smtpClient.Send(mail);
         }
     }
 

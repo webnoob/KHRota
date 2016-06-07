@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Windows.Forms;
+using KHPlayer.Extensions;
 using KHRota.Classes;
+using KHRota.Data;
 using KHRota.Extensions;
 using KHRota.Helpers;
 using KHRota.SuitabilityCalculators;
@@ -13,16 +17,18 @@ namespace KHRota.Services
     {
         private readonly BrotherService _brotherService;
         private readonly JobService _jobService;
+        private string _historyFilePath;
 
         public ScheduleService()
         {
             _brotherService = new BrotherService();
             _jobService = new JobService();
+            _historyFilePath = Application.StartupPath + "\\ScheduleHistory\\";
         }
 
         public MeetingSchedule GenerateMeetingSchedule(IEnumerable<Meeting> meetings, SchedulePeriod period)
         {
-            var result = new MeetingSchedule();
+            var result = Create(period.StartDate);
 
             foreach (var meeting in meetings)
             {
@@ -30,7 +36,7 @@ namespace KHRota.Services
                 var endDate = new DateTime(startDate.Year, startDate.Month, 1, 0, 0, 0, startDate.Kind);
                 //If we generate the schedule on the 27/04 then it would reset it back to 01/05. This will ensure it goes forward until 01/06
                 if (endDate < startDate.AddMonths(period.Months))
-                    endDate = new DateTime(startDate.Year, startDate.AddMonths(1).Month, 1, 0, 0, 0, startDate.Kind);
+                    endDate = endDate.AddMonths(1);
 
                 var numberOfMeetingsInPeriod = DateTimeHelper.CountDays(meeting.DayOfWeek, period.StartDate, endDate);
 
@@ -50,6 +56,15 @@ namespace KHRota.Services
             result.ScheduledMeetings = result.ScheduledMeetings.OrderBy(s => s.DateTime).ToList();
             AssignJobs(result.ScheduledMeetings);
             return result;
+        }
+
+        public MeetingSchedule Create(DateTime startDate)
+        {
+            return new MeetingSchedule
+            {
+                Guid = Guid.NewGuid().ToString(),
+                StartDate = startDate
+            };
         }
 
         private void AssignJobs(List<ScheduledMeeting> meetingSchedules)
@@ -187,6 +202,42 @@ namespace KHRota.Services
             }
 
             return csv;
+        }
+
+        public IEnumerable<string> GetMeetingSchedulesStartDates()
+        {
+            return Directory.GetFiles(_historyFilePath);
+        }
+
+        public void SaveGeneratedMeetingSchedule(MeetingSchedule meetingSchedule)
+        {
+            //Wait until this folder is created (windows might be a little slow in creation)
+            while (!Directory.Exists(_historyFilePath))
+                Directory.CreateDirectory(_historyFilePath);
+
+            var fileName = GetMeetingSchduleFileName(meetingSchedule);
+            if (fileName == null)
+                return;
+
+            meetingSchedule.ToSerializedJson(fileName);
+        }
+
+        private string GetMeetingSchduleFileName(MeetingSchedule meetingSchedule)
+        {
+            if (meetingSchedule == null)
+                return null;
+
+            return string.Format("{0}KHRota_{1}.db", _historyFilePath, meetingSchedule.StartDate.ToString("dd-MM-yyyy"));
+        }
+
+        public MeetingSchedule LoadFromFile(string fileName)
+        {
+            return Path.Combine(_historyFilePath, fileName).ToDeserialisedJson<MeetingSchedule>(true);
+        }
+
+        public void Delete(MeetingSchedule meetingSchedule)
+        {
+            File.Delete(GetMeetingSchduleFileName(meetingSchedule));
         }
     }
 }

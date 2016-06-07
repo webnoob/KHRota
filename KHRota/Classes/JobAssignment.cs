@@ -1,4 +1,5 @@
 ﻿using KHRota.Services;
+using Newtonsoft.Json;
 
 namespace KHRota.Classes
 {
@@ -14,9 +15,13 @@ namespace KHRota.Classes
         }
 
         public string BrotherGuid { get; set; }
+
+        [JsonIgnore]
         public Brother Brother { get { return _brotherService.GetByGuid(BrotherGuid); } }
 
         public string JobGuid { get; set; }
+        
+        [JsonIgnore]
         public Job Job { get { return _jobService.GetByGuid(JobGuid); } }
 
         public BrotherSuitabilityFactor SuitabilityFactor { get; set; }

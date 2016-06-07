@@ -10,7 +10,9 @@ namespace KHRota.Classes
     {
         private readonly JobService _jobService;
         
+        [NonSerialized]
         private List<Job> _requiredJobs;
+
         private List<string> _requiredJobGuids;
 
         public Meeting()
@@ -41,7 +43,7 @@ namespace KHRota.Classes
             set
             {
                 _requiredJobs = value;
-                //_requiredJobGuids = value.Select(j => j.Guid).ToList();
+                _requiredJobGuids = value.Select(j => j.Guid).ToList();
             }
         }
 
