@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using KHRota.Classes;
 using KHRota.Properties;
@@ -49,6 +50,17 @@ namespace KHRota.Forms
                     datePicker.ShowDialog(this);
                     if (datePicker.DialogResult == DialogResult.OK)
                     {
+                        var existingSchedules = _scheduleService.GetMeetingSchedulesStartDates()
+                            .Select(Path.GetFileName)
+                            .ToList();
+
+                        if (existingSchedules.Any(f => f.Contains(datePicker.DateTimeResult.ToString("dd-MM-yyyy"))))
+                        {
+                            MessageBox.Show("There is already a schedule for this date, please delete if first if you wish to overwrite.");
+                            return;
+                        }
+
+
                         _generatedMeetingSchedule = _scheduleService.GenerateMeetingSchedule(_meetingService.Get(),
                             new SchedulePeriod
                             {
