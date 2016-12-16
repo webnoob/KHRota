@@ -164,7 +164,9 @@ namespace KHRota.Forms
                 foreach (var jobAssignment in scheduledMeeting.JobAssignments)
                 {
                     if ((sender as DataGridView).Columns.Contains(MakeColumnName(jobAssignment.Job.Name)))
-                        currentRow.Cells[MakeColumnName(jobAssignment.Job.Name)].Value = jobAssignment.Brother.FullName;
+                        currentRow.Cells[MakeColumnName(jobAssignment.Job.Name)].Value = jobAssignment.Brother != null
+                            ? jobAssignment.Brother.FullName
+                            : "Volunteer Required";
                 }
             }
         }
@@ -185,7 +187,7 @@ namespace KHRota.Forms
 
         private void printDoc1_PrintPage(object sender, PrintPageEventArgs e)
         {
-            const int baseHeightSpace = 70;
+            const int baseHeightSpace = 40;
             _printing = true;
             try
             {
@@ -199,12 +201,14 @@ namespace KHRota.Forms
                 {
                     var grid = GetGrid(jobGroup);
                     pReport.Controls.Add(grid);
-                    totalHeight += grid.Height;
                     font = grid.Font;
                     PrintGrid(sender, e, grid, lastGrid);
                     lastGrid = grid;
+                    totalHeight += grid.Height;
                     pReport.Controls.Remove(grid);
                 }
+                //This allows for the spacing we put in PrintGrid() - currently 10 - and also the top margin - currently 20
+                totalHeight += 20 + jobGroups.Count() - 1 * 40 + 180;
 
                 //totalHeight += baseHeightSpace;
                 var stringsToPrint = new Dictionary<string, bool>
@@ -275,7 +279,7 @@ namespace KHRota.Forms
                 //Set the left margin
                 var iLeftMargin = e.MarginBounds.Left;
                 //Set the top margin
-                var iTopMargin = previousGridView == null ? e.MarginBounds.Top : previousGridView.Height - 50;
+                var iTopMargin = previousGridView == null ? e.MarginBounds.Top : previousGridView.Height + 40;
                 //Whether more pages have to print or not
                 var iTmpWidth = 0;
                 var iRow = 0;

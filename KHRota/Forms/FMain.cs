@@ -65,7 +65,8 @@ namespace KHRota.Forms
                             new SchedulePeriod
                             {
                                 Months = Settings.Default.MonthsInAdvance,
-                                StartDate = DateTime.Parse(datePicker.DateTimeResult.ToString("d"))
+                                StartDate = DateTime.Parse(datePicker.DateTimeResult.ToString("d")),
+                                ForceEndDate = DateTime.Parse(datePicker.DateTimeResultAlt.ToString("d"))
                             });
                     }
                 }

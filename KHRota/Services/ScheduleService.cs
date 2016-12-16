@@ -29,20 +29,27 @@ namespace KHRota.Services
         public MeetingSchedule GenerateMeetingSchedule(IEnumerable<Meeting> meetings, SchedulePeriod period)
         {
             var result = Create(period.StartDate);
-            var endDate = new DateTime(period.StartDate.Year, period.StartDate.AddMonths(period.Months).Month, 1, 0, 0, 0, period.StartDate.Kind);
-            var endOfStartDateMonth = new DateTime(period.StartDate.Year, period.StartDate.Month,
-                DateTime.DaysInMonth(period.StartDate.Year, period.StartDate.Month), 0, 0, 0, period.StartDate.Kind);
 
-            //There are issues when we do a date that's at the end of a month and we're trying to generate it for the next month
-            //Add a threshold in where it generates for next month if there are less than X dates left.
-            //If we generate the schedule on the 27/04 then it would reset it back to 01/05. This will ensure it goes forward until 01/06
-            //Likewise if we generate for 02/08 it will also mean it doesn't skip to 01/10 but instead goes to then end of september.
-            var numberOfMeetingsBeforeEndOfStartDateMonth = 0;
-            foreach (var meeting in meetings) 
-                numberOfMeetingsBeforeEndOfStartDateMonth += DateTimeHelper.CountDays(meeting.DayOfWeek, period.StartDate, endOfStartDateMonth);
-            
-            if (numberOfMeetingsBeforeEndOfStartDateMonth < 3)
-                endDate = endDate.AddMonths(1);
+            DateTime endDate = period.ForceEndDate;
+            if (endDate == DateTime.MinValue)
+            {
+                endDate = new DateTime(period.StartDate.AddMonths(period.Months).Year,
+                    period.StartDate.AddMonths(period.Months).Month, 1, 0, 0, 0, period.StartDate.Kind);
+                var endOfStartDateMonth = new DateTime(period.StartDate.Year, period.StartDate.Month,
+                    DateTime.DaysInMonth(period.StartDate.Year, period.StartDate.Month), 0, 0, 0, period.StartDate.Kind);
+
+                //There are issues when we do a date that's at the end of a month and we're trying to generate it for the next month
+                //Add a threshold in where it generates for next month if there are less than X dates left.
+                //If we generate the schedule on the 27/04 then it would reset it back to 01/05. This will ensure it goes forward until 01/06
+                //Likewise if we generate for 02/08 it will also mean it doesn't skip to 01/10 but instead goes to then end of september.
+                var numberOfMeetingsBeforeEndOfStartDateMonth = 0;
+                foreach (var meeting in meetings)
+                    numberOfMeetingsBeforeEndOfStartDateMonth += DateTimeHelper.CountDays(meeting.DayOfWeek,
+                        period.StartDate, endOfStartDateMonth);
+
+                if (numberOfMeetingsBeforeEndOfStartDateMonth < 3)
+                    endDate = endDate.AddMonths(1);
+            }
 
             foreach (var meeting in meetings)
             {
