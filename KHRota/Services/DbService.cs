@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Configuration;
 using KHPlayer.Extensions;
 using KHRota.Classes;
 using KHRota.Data;

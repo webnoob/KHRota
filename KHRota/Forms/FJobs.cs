@@ -115,6 +115,20 @@ namespace KHRota.Forms
             LoadJobGroupList(jobGroup);
         }
 
+        private void bEditGroup_Click(object sender, EventArgs e)
+        {
+            var point = GetScreenPoint();
+            var existingJobGroup = cbJobGroups.SelectedItem as JobGroup;
+            var name = Interaction.InputBox("Job Group Name?", "Job Group Name", existingJobGroup.Name, point.X, point.Y);
+            if (String.IsNullOrEmpty(name))
+                return;
+
+            existingJobGroup.Name = name;
+            _jobGroupService.Update(existingJobGroup);
+            DbService.Save();
+            LoadJobGroupList(existingJobGroup);
+        }
+
         private Point GetScreenPoint()
         {
             var screen = Screen.FromControl(this);

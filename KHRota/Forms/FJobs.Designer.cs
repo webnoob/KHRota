@@ -38,6 +38,7 @@
             this.cbJobGroups = new System.Windows.Forms.ComboBox();
             this.bAddJobGroup = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
+            this.bEditGroup = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // lJobName
@@ -134,11 +135,22 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
+            // bEditGroup
+            // 
+            this.bEditGroup.Location = new System.Drawing.Point(47, 92);
+            this.bEditGroup.Name = "bEditGroup";
+            this.bEditGroup.Size = new System.Drawing.Size(91, 23);
+            this.bEditGroup.TabIndex = 17;
+            this.bEditGroup.Text = "Edit Group";
+            this.bEditGroup.UseVisualStyleBackColor = true;
+            this.bEditGroup.Click += new System.EventHandler(this.bEditGroup_Click);
+            // 
             // FJobs
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(329, 191);
+            this.Controls.Add(this.bEditGroup);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.bAddJobGroup);
             this.Controls.Add(this.cbJobGroups);
@@ -169,5 +181,6 @@
         private System.Windows.Forms.ComboBox cbJobGroups;
         private System.Windows.Forms.Button bAddJobGroup;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button bEditGroup;
     }
 }

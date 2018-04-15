@@ -77,6 +77,15 @@ namespace KHRota.Forms
             if (Enum.TryParse(cbDayOfWeek.Text, true, out dayOfWeek))
                 meeting.DayOfWeek = dayOfWeek;
 
+            meeting.RequiredJobs = new List<Job>();
+            meeting.RequiredJobGuids = new List<string>();
+
+            foreach (Job job in cblRequiredJobs.CheckedItems)
+            {
+                meeting.RequiredJobs.Add(job);
+                meeting.RequiredJobGuids.Add(job.Guid);
+            }
+
             _meetingService.Update(meeting);
             DbService.Save();
             LoadMeetingList(meeting);
@@ -94,6 +103,7 @@ namespace KHRota.Forms
             dtpTime.Text = meeting.Time.ToString();
             cbDayOfWeek.SelectedItem = meeting.DayOfWeek.ToString();
             cbType.SelectedItem = meeting.Type.ToString();
+            LoadAssignedJobs(meeting.RequiredJobs);
         }
 
         private void bDelete_Click(object sender, EventArgs e)

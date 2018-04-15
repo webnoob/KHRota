@@ -10,6 +10,7 @@ using System.Text;
 using System.Windows.Forms;
 using KHRota.Classes;
 using KHRota.Properties;
+using KHRota.Services;
 using BorderStyle = System.Windows.Forms.BorderStyle;
 
 //NOTE: Pretty much all the code in this file sucks :) It's quite specific to our needs for the reporting.
@@ -19,6 +20,7 @@ namespace KHRota.Forms
     public partial class FDisplayReport : Form
     {
         private readonly MeetingSchedule _meetingSchedule;
+        private readonly ScheduleService _scheduleService;
         private readonly ArrayList arrColumnLefts = new ArrayList(); //Used to save left coordinates of columns
         private readonly ArrayList arrColumnWidths = new ArrayList(); //Used to save column widths
         private bool _printing;
@@ -27,12 +29,14 @@ namespace KHRota.Forms
         private int iCellHeight; //Used to get/set the datagridview cell height
         private int iHeaderHeight; //Used for the header height
         private int iTotalWidth; //
+        private int _topMargin = 20;
         private StringFormat strFormat; //Used to format the grid rows.
         private SmtpClient _smtpClient;
 
         public FDisplayReport(MeetingSchedule meetingSchedule)
         {
             _meetingSchedule = meetingSchedule;
+            _scheduleService = new ScheduleService();
 
             InitializeComponent();
             LoadJobGroups();
@@ -99,6 +103,7 @@ namespace KHRota.Forms
             grid.Font = new Font("Tahoma", 13);
             grid.DataBindingComplete += GridOnDataBindingComplete;
             grid.CellPainting += GridOnCellPainting;
+            grid.CellDoubleClick += GridOnCellDoubleClick;
 
             var jobsInThisGroup =
                 _meetingSchedule.ScheduledMeetings.SelectMany(
@@ -118,6 +123,38 @@ namespace KHRota.Forms
 
             grid.DataSource = bindingList;
             return grid;
+        }
+
+        private void GridOnCellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            var grid = sender as DataGridView;
+            var fullName = grid.SelectedCells[0].Value;
+            var meetingSchedule = _meetingSchedule.ScheduledMeetings[e.RowIndex];
+            using (var form = new FSelectBrother())
+            {
+                form.ShowDialog(this);
+                if (form.DialogResult != DialogResult.OK)
+                    return;
+
+                var assignmentsForThisBrother = meetingSchedule.JobAssignments.Where(ja => ja.Brother.Equals(form.Brother));
+                if (assignmentsForThisBrother.Any())
+                {
+                    MessageBox.Show(String.Format("This brother is already assigned to [{0}]. Please select a different brother.", assignmentsForThisBrother.FirstOrDefault().Job.Name));
+                    return;
+                }
+
+                Cursor = Cursors.WaitCursor;
+                try
+                {
+                    _scheduleService.ReplaceBrother(meetingSchedule, form.Brother, fullName.ToString(), (cbJobGroups.SelectedItem as JobGroup).Name, grid.Columns[e.ColumnIndex].HeaderText);
+                    _scheduleService.SaveGeneratedMeetingSchedule(_meetingSchedule);
+                    LoadDataGrid(cbJobGroups.SelectedItem as JobGroup);
+                }
+                finally
+                {
+                    Cursor = Cursors.Default;
+                }
+            }
         }
 
         private void GridOnCellPainting(object sender, DataGridViewCellPaintingEventArgs e)
@@ -158,8 +195,8 @@ namespace KHRota.Forms
                 if (scheduledMeeting == null)
                     return;
 
-                currentRow.Cells["day"].Value = scheduledMeeting.Meeting.DayOfWeek.ToString();
-                currentRow.Cells["date"].Value = scheduledMeeting.DateTime.ToString("d");
+                currentRow.Cells["day"].Value = scheduledMeeting.Meeting.DayOfWeek.ToString().Substring(0, 3);
+                currentRow.Cells["date"].Value = scheduledMeeting.DateTime.ToString("dd/MM");
 
                 foreach (var jobAssignment in scheduledMeeting.JobAssignments)
                 {
@@ -187,35 +224,27 @@ namespace KHRota.Forms
 
         private void printDoc1_PrintPage(object sender, PrintPageEventArgs e)
         {
-            const int baseHeightSpace = 40;
+            const int baseHeightSpace = 30;
             _printing = true;
             try
             {
                 var jobGroups = GetJobGroups();
-                DataGridView previousGrid = null;
-
-                var totalHeight = 0;
                 Font font = null;
-                DataGridView lastGrid = null;
+
                 foreach (var jobGroup in jobGroups.OrderBy(j => j.Name))
                 {
                     var grid = GetGrid(jobGroup);
                     pReport.Controls.Add(grid);
                     font = grid.Font;
-                    PrintGrid(sender, e, grid, lastGrid);
-                    lastGrid = grid;
-                    totalHeight += grid.Height;
+                    PrintGrid(sender, e, grid);
                     pReport.Controls.Remove(grid);
                 }
-                //This allows for the spacing we put in PrintGrid() - currently 10 - and also the top margin - currently 20
-                totalHeight += 20 + jobGroups.Count() - 1 * 40 + 180;
-
-                //totalHeight += baseHeightSpace;
+                
                 var stringsToPrint = new Dictionary<string, bool>
                 {
                     {"Please ensure that you arrive for the meeting at least 20 minutes before it starts.", true},
                     {"If you can not complete your assignment please contact as follows:", true},
-                    {"Bro Jim Cambage - 07757 712663 (Attendants)", false},
+                    {"Bro Jim Cambage - 07757 712663 (Attendants / Garage)", false},
                     {"Bro Kevin Normington - 07429 326193 (Sound Team)", false}
                 };
 
@@ -225,13 +254,13 @@ namespace KHRota.Forms
                     var printBold = stringsToPrint.Values.ToList()[i];
                     var text = stringsToPrint.Keys.ToList()[i];
 
-                    e.Graphics.DrawString(text, printBold ? boldFont : font, Brushes.Black, 0,
-                        totalHeight-(baseHeightSpace*2) + (i == 0 ? 0 : baseHeightSpace*i));
+                    e.Graphics.DrawString(text, printBold ? boldFont : font, Brushes.Black, 0, _topMargin + (i + 1) * baseHeightSpace);
                 }
             }
             finally
             {
                 _printing = false;
+                _topMargin = 20;
             }
         }
 
@@ -272,14 +301,13 @@ namespace KHRota.Forms
             }
         }
 
-        private void PrintGrid(object sender, PrintPageEventArgs e, DataGridView grid, DataGridView previousGridView)
+        private void PrintGrid(object sender, PrintPageEventArgs e, DataGridView grid)
         {
             try
             {
                 //Set the left margin
                 var iLeftMargin = e.MarginBounds.Left;
-                //Set the top margin
-                var iTopMargin = previousGridView == null ? e.MarginBounds.Top : previousGridView.Height + 40;
+                
                 //Whether more pages have to print or not
                 var iTmpWidth = 0;
                 var iRow = 0;
@@ -318,12 +346,12 @@ namespace KHRota.Forms
                             e.Graphics.DrawString(GridCol.HeaderText,
                                 columnFont,
                                 new SolidBrush(GridCol.InheritedStyle.ForeColor),
-                                new RectangleF((int) arrColumnLefts[iCount], iTopMargin,
+                                new RectangleF((int) arrColumnLefts[iCount], _topMargin,
                                     (int) arrColumnWidths[iCount], iHeaderHeight), strFormat);
                             iCount++;
                         }
                         bNewPage = false;
-                        iTopMargin += iHeaderHeight;
+                        _topMargin += iHeaderHeight;
                     }
                     iCount = 0;
                     //Draw Columns Contents                
@@ -335,7 +363,7 @@ namespace KHRota.Forms
                                 Cel.InheritedStyle.Font,
                                 new SolidBrush(Cel.InheritedStyle.ForeColor),
                                 new RectangleF((int) arrColumnLefts[iCount],
-                                    iTopMargin,
+                                    _topMargin,
                                     (int) arrColumnWidths[iCount], iCellHeight),
                                 strFormat);
                         }
@@ -344,13 +372,13 @@ namespace KHRota.Forms
                         {
                             //Drawing Cells Borders 
                             e.Graphics.DrawRectangle(Pens.Black,
-                                new Rectangle((int) arrColumnLefts[iCount], iTopMargin,
+                                new Rectangle((int) arrColumnLefts[iCount], _topMargin,
                                     (int) arrColumnWidths[iCount], iCellHeight));
                         }
                         iCount++;
                     }
                     iRow++;
-                    iTopMargin += iCellHeight;
+                    _topMargin += iCellHeight;
                 }
             }
             catch (Exception exc)
@@ -396,7 +424,7 @@ namespace KHRota.Forms
             var sb = new StringBuilder();
             sb.Append("<p><b>Please ensure you arrive for the meeting at least 20 minutes before it starts.</b></p><br/>");
             sb.Append("<p><b>If you cannot complete your assignment please contact as follows:</b></p><br/>");
-            sb.Append("<p>Bro Jim Cambage - 07757 712663 (Attendants)</p><br/>");
+            sb.Append("<p>Bro Jim Cambage - 07757 712663 (Attendants / Garage)</p><br/>");
             sb.Append("<p>Bro Kevin Normington - 07429 326193 (Sound Team)</p><br/>");
             var footerString = sb.ToString();
             return footerString;
@@ -408,7 +436,7 @@ namespace KHRota.Forms
             var jobGroups = GetJobGroups();
             foreach (var jobGroup in jobGroups.OrderBy(j => j.Name))
             {
-                sb.Append("<table width='100%' style='border-collapse:collapse;'>");
+                sb.Append("<table width='99%' style='border-collapse:collapse;'>");
 
                 var grid = GetGrid(jobGroup);
                 pReport.Controls.Add(grid);
@@ -483,7 +511,7 @@ namespace KHRota.Forms
                         _meetingSchedule.StartDate.ToString("dd-MM-yyyy")),
                 Body =
                     string.Format(
-                        "Hi {0},<br/><br/>Here is the rota for your Kingdom Hall assignments. If you have any problems, please see the contact details at the bottom of the email.<br/><br/>{1}",
+                        "Hi {0},<br/><br/>Here is the rota for your Kingdom Hall assignments. If you have any problems, please see the contact details at the bottom of the email.<br/><br/><b>Please Note:</b> Replies to this email are not read.<br/><br/>{1}",
                         brother.FirstName, body),
                 IsBodyHtml = true
             };

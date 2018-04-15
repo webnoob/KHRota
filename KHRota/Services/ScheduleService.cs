@@ -254,5 +254,11 @@ namespace KHRota.Services
         {
             File.Delete(GetMeetingSchduleFileName(meetingSchedule));
         }
+
+        public void ReplaceBrother(ScheduledMeeting meeting, Brother newBrother, string fullNameOfBrotherToReplace, string jobGroupName, string jobName)
+        {
+            var jobAssignment = meeting.JobAssignments.FirstOrDefault(ja => ja.Brother.FullName.Equals(fullNameOfBrotherToReplace) && ja.Job.Name.Equals(jobName) && ja.Job.JobGroup.Name.Equals(jobGroupName));
+            jobAssignment.BrotherGuid = newBrother.Guid;
+        }
     }
 }
