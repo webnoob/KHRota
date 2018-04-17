@@ -244,7 +244,7 @@ namespace KHRota.Forms
                 {
                     {"Please ensure that you arrive for the meeting at least 20 minutes before it starts.", true},
                     {"If you can not complete your assignment please contact as follows:", true},
-                    {"Bro Jim Cambage - 07757 712663 (Attendants / Garage)", false},
+                    {"Bro Pawel Kulda - 07545 757889 (Attendants / Garage)", false},
                     {"Bro Kevin Normington - 07429 326193 (Sound Team)", false}
                 };
 
