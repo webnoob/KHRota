@@ -27,9 +27,15 @@ namespace KHRota.Forms
             LoadMeetingSchedules();
         }
 
+        private DateTime GetDateTimeFromFileName(string fileName)
+        {
+            return DateTime.Parse(fileName.Split('_')[1].Replace(".db", ""));
+        }
+
         private void LoadMeetingSchedules()
         {
             var schedules = _scheduleService.GetMeetingSchedulesStartDates().Select(Path.GetFileName).ToList();
+            schedules.Sort((a, b) => DateTime.Compare(GetDateTimeFromFileName(b), GetDateTimeFromFileName(a)));
             if (!schedules.Any())
             {
                 MessageBox.Show("No previous history.");

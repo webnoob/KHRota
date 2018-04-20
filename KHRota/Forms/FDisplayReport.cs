@@ -21,6 +21,8 @@ namespace KHRota.Forms
     {
         private readonly MeetingSchedule _meetingSchedule;
         private readonly ScheduleService _scheduleService;
+        private readonly BrotherService _brotherService;
+
         private readonly ArrayList arrColumnLefts = new ArrayList(); //Used to save left coordinates of columns
         private readonly ArrayList arrColumnWidths = new ArrayList(); //Used to save column widths
         private bool _printing;
@@ -37,6 +39,7 @@ namespace KHRota.Forms
         {
             _meetingSchedule = meetingSchedule;
             _scheduleService = new ScheduleService();
+            _brotherService = new BrotherService();
 
             InitializeComponent();
             LoadJobGroups();
@@ -125,12 +128,19 @@ namespace KHRota.Forms
             return grid;
         }
 
+        private List<Brother> GetAllowedBrothersForPopup(Job jobAssignment)
+        {
+            return _brotherService.Get().Where(b => b.AssignedJobs.Select(j => j.Guid).Contains(jobAssignment.Guid)).ToList();
+        }
+
         private void GridOnCellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             var grid = sender as DataGridView;
             var fullName = grid.SelectedCells[0].Value;
             var meetingSchedule = _meetingSchedule.ScheduledMeetings[e.RowIndex];
-            using (var form = new FSelectBrother())
+            var assignmentName = grid.Columns[e.ColumnIndex].HeaderText;
+            var jobAssignment = meetingSchedule.JobAssignments.Select(ja => ja.Job).FirstOrDefault(j => j.Name.Equals(assignmentName));
+            using (var form = new FSelectBrother(GetAllowedBrothersForPopup(jobAssignment)))
             {
                 form.ShowDialog(this);
                 if (form.DialogResult != DialogResult.OK)
@@ -146,7 +156,7 @@ namespace KHRota.Forms
                 Cursor = Cursors.WaitCursor;
                 try
                 {
-                    _scheduleService.ReplaceBrother(meetingSchedule, form.Brother, fullName.ToString(), (cbJobGroups.SelectedItem as JobGroup).Name, grid.Columns[e.ColumnIndex].HeaderText);
+                    _scheduleService.ReplaceBrother(meetingSchedule, form.Brother, fullName.ToString(), (cbJobGroups.SelectedItem as JobGroup).Name, assignmentName);
                     _scheduleService.SaveGeneratedMeetingSchedule(_meetingSchedule);
                     LoadDataGrid(cbJobGroups.SelectedItem as JobGroup);
                 }
@@ -481,7 +491,7 @@ namespace KHRota.Forms
 
         private void bEmailToBrother_Click(object sender, EventArgs e)
         {
-            using (var form = new FSelectBrother())
+            using (var form = new FSelectBrother(_brotherService.Get().Where(b => !string.IsNullOrEmpty(b.EmailAddress)).ToList()))
             {
                 form.ShowDialog(this);
                 if (form.DialogResult != DialogResult.OK)

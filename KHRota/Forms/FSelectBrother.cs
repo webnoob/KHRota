@@ -15,13 +15,15 @@ namespace KHRota.Forms
     public partial class FSelectBrother : Form
     {
         private readonly BrotherService _brotherService;
+        private ICollection<Brother> _allowedBrothers;
 
         public Brother Brother { get; set; }
         
-        public FSelectBrother()
+        public FSelectBrother(List<Brother> allowedBrothers)
         {
             _brotherService = new BrotherService();
-            
+            _allowedBrothers = allowedBrothers;
+
             InitializeComponent();
             
             LoadBrotherList(null);
@@ -30,7 +32,7 @@ namespace KHRota.Forms
         private void LoadBrotherList(Brother brother)
         {
             var brothersToBind = new List<Brother>();
-            brothersToBind.AddRange(_brotherService.Get().Where(b => !string.IsNullOrEmpty(b.EmailAddress)).OrderBy(b => b.FirstName).ThenBy(b => b.LastName));
+            brothersToBind.AddRange(_allowedBrothers.OrderBy(b => b.FirstName).ThenBy(b => b.LastName));
             cbEditBrother.DataSource = brothersToBind;
             cbEditBrother.DisplayMember = "FullName";
             cbEditBrother.ValueMember = "Guid";
