@@ -135,6 +135,8 @@ namespace KHRota.Forms
 
         private void GridOnCellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
+            if (e.RowIndex < 0) return;
+
             var grid = sender as DataGridView;
             var fullName = grid.SelectedCells[0].Value;
             var meetingSchedule = _meetingSchedule.ScheduledMeetings[e.RowIndex];
@@ -210,9 +212,10 @@ namespace KHRota.Forms
 
                 foreach (var jobAssignment in scheduledMeeting.JobAssignments)
                 {
+                    string lastName = String.IsNullOrEmpty(jobAssignment.Brother.LastName) ? "" : jobAssignment.Brother.LastName.Substring(0, 1);
                     if ((sender as DataGridView).Columns.Contains(MakeColumnName(jobAssignment.Job.Name)))
                         currentRow.Cells[MakeColumnName(jobAssignment.Job.Name)].Value = jobAssignment.Brother != null
-                            ? jobAssignment.Brother.FullName
+                            ? jobAssignment.Brother.FirstName + " " + lastName
                             : "Volunteer Required";
                 }
             }
@@ -234,7 +237,7 @@ namespace KHRota.Forms
 
         private void printDoc1_PrintPage(object sender, PrintPageEventArgs e)
         {
-            const int baseHeightSpace = 30;
+            const int baseHeightSpace = 50;
             _printing = true;
             try
             {
@@ -247,6 +250,7 @@ namespace KHRota.Forms
                     pReport.Controls.Add(grid);
                     font = grid.Font;
                     PrintGrid(sender, e, grid);
+                    _topMargin = _topMargin + 10;
                     pReport.Controls.Remove(grid);
                 }
                 
@@ -434,7 +438,7 @@ namespace KHRota.Forms
             var sb = new StringBuilder();
             sb.Append("<p><b>Please ensure you arrive for the meeting at least 20 minutes before it starts.</b></p><br/>");
             sb.Append("<p><b>If you cannot complete your assignment please contact as follows:</b></p><br/>");
-            sb.Append("<p>Bro Jim Cambage - 07757 712663 (Attendants / Garage)</p><br/>");
+            sb.Append("<p>Bro Pawel Kulda - 07545 757889(Attendants / Garage)</p><br/>");
             sb.Append("<p>Bro Kevin Normington - 07429 326193 (Sound Team)</p><br/>");
             var footerString = sb.ToString();
             return footerString;
@@ -485,8 +489,8 @@ namespace KHRota.Forms
 
         private string HighlightBrother(string gridString, Brother brother)
         {
-            return gridString.Replace(brother.FullName,
-                string.Format("<span style='background-color: #ffff66;width:100%'><b>{0}</b></span>", brother.FullName));
+            return gridString.Replace(_scheduleService.GetBrotherName(brother),
+                string.Format("<span style='background-color: #ffff66;width:100%'><b>{0}</b></span>", _scheduleService.GetBrotherName(brother)));
         }
 
         private void bEmailToBrother_Click(object sender, EventArgs e)

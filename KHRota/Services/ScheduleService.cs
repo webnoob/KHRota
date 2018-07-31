@@ -257,8 +257,14 @@ namespace KHRota.Services
 
         public void ReplaceBrother(ScheduledMeeting meeting, Brother newBrother, string fullNameOfBrotherToReplace, string jobGroupName, string jobName)
         {
-            var jobAssignment = meeting.JobAssignments.FirstOrDefault(ja => ja.Brother.FullName.Equals(fullNameOfBrotherToReplace) && ja.Job.Name.Equals(jobName) && ja.Job.JobGroup.Name.Equals(jobGroupName));
+            var jobAssignment = meeting.JobAssignments.FirstOrDefault(ja => GetBrotherName(ja.Brother).Equals(fullNameOfBrotherToReplace) && ja.Job.Name.Equals(jobName) && ja.Job.JobGroup.Name.Equals(jobGroupName));
             jobAssignment.BrotherGuid = newBrother.Guid;
+        }
+
+        public string GetBrotherName(Brother brother)
+        {
+            string lastName = String.IsNullOrEmpty(brother.LastName) ? "" : brother.LastName.Substring(0, 1);
+            return brother != null ? brother.FirstName + " " + lastName : "Volunteer Required";
         }
     }
 }

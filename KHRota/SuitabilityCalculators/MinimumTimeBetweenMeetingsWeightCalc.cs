@@ -34,7 +34,7 @@ namespace KHRota.SuitabilityCalculators
 
         public override int WeightFactor
         {
-            get { return 10; }
+            get { return 20; }
         }
     }
 }
