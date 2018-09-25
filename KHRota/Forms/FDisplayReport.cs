@@ -74,7 +74,7 @@ namespace KHRota.Forms
         {
             pReport.Controls.Clear();
             var grid = GetGrid(jobGroup);
-            pReport.Controls.Add(grid);
+            if (grid != null) pReport.Controls.Add(grid);
         }
 
         private DataGridView GetGrid(JobGroup jobGroup)
@@ -110,7 +110,9 @@ namespace KHRota.Forms
 
             var jobsInThisGroup =
                 _meetingSchedule.ScheduledMeetings.SelectMany(
-                    s => s.JobAssignments.Where(j => j.Job.JobGroup == jobGroup).Select(j => j.Job));
+                    s => s.JobAssignments.Where(j => j.Job.JobGroup == jobGroup && !j.Job.Disabled).Select(j => j.Job));
+
+            if (jobsInThisGroup.Count() == 0) return null;
 
             grid.Columns.Add(new DataGridViewTextBoxColumn {HeaderText = "Day", Name = "day"});
             grid.Columns.Add(new DataGridViewTextBoxColumn {HeaderText = "Date", Name = "date"});
@@ -406,7 +408,7 @@ namespace KHRota.Forms
         {
             return
                 new List<JobGroup>(
-                    _meetingSchedule.ScheduledMeetings.SelectMany(s => s.JobAssignments.Select(j => j.Job.JobGroup)))
+                    _meetingSchedule.ScheduledMeetings.SelectMany(s => s.JobAssignments.Where(j => !j.Job.Disabled)).Select(j => j.Job.JobGroup))
                     .Distinct().ToList();
         }
 

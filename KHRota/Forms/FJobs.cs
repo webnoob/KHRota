@@ -69,6 +69,7 @@ namespace KHRota.Forms
             var job = cbEditJob.SelectedItem as Job ?? new Job();
             job.Name = tbName.Text;
             job.JobGroup = cbJobGroups.SelectedItem as JobGroup;
+            job.Disabled = cbDisabled.Checked;
             _jobService.Update(job);
             DbService.Save();
             LoadJobList(job);
@@ -83,6 +84,7 @@ namespace KHRota.Forms
         private void LoadFormValues(Job job)
         {
             tbName.Text = job.Name == "New Job ..." ? "" : job.Name;
+            cbDisabled.Checked = job.Disabled;
             LoadJobGroupList(job.JobGroup);
         }
 

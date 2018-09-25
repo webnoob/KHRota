@@ -17,6 +17,8 @@ namespace KHRota.Classes
 
         public string JobGroupGuid { get; set; }
 
+        public Boolean Disabled { get; set; }
+
         [JsonIgnore]
         public JobGroup JobGroup
         {

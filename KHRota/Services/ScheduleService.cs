@@ -95,7 +95,8 @@ namespace KHRota.Services
             }
             var jobsToEnumerate =
                 listOfJobsOrderedByLeastPeopleCapable.OrderBy(kvp => kvp.Value)
-                    .Select(kvp => _jobService.GetByGuid(kvp.Key));
+                    .Select(kvp => _jobService.GetByGuid(kvp.Key))
+                    .Where(j => !j.Disabled);
 
             //Go through all the jobs for the entire schedule with the jobs that the least amount of people can do first.
             //This should mean we fill the hardest to populate roles first, then fill the gaps with people who can do 
